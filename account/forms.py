@@ -1,13 +1,20 @@
 from django import forms
 from django.contrib.auth.models import User
+from .models import Profile
 import re
+
+errors = {
+    'min_lenght': '',
+    'max_lenght': '',
+    'required': 'این فیلد باید پر شود',
+}
 
 
 class RegisterForm(forms.Form):
-    username = forms.CharField(max_length=25, min_length=5)
+    username = forms.CharField(max_length=25, min_length=5, error_messages=errors)
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': ''}))
-    first_name = forms.CharField(max_length=30)
-    last_name = forms.CharField(max_length=30)
+    first_name = forms.CharField(min_length=3, max_length=30)
+    last_name = forms.CharField(min_length=3, max_length=30)
     password1 = forms.CharField(max_length=50, widget=forms.PasswordInput(attrs={'placeholder': 'رمز'}))
     password2 = forms.CharField(max_length=50, widget=forms.PasswordInput(attrs={'placeholder': 'تکرار رمز'}))
 
@@ -39,3 +46,15 @@ class RegisterForm(forms.Form):
 class LoginForm(forms.Form):
     user = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'enter username or email'}))
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name']
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['phone', 'address']
