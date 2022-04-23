@@ -4,8 +4,8 @@ from .models import Profile
 import re
 
 errors = {
-    'min_lenght': '',
-    'max_lenght': '',
+    'min_lenght': 'حداکثر طول را رعایت کنید',
+    'max_lenght': 'حداقل طول',
     'required': 'این فیلد باید پر شود',
 }
 

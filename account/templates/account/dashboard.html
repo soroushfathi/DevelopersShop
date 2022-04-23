@@ -1,6 +1,28 @@
 {% extends 'base.html' %}
 {% block title %} پنل کاربری {% endblock %}
 {% block body %}
-    <h1>Dashboard</h1>
-    <a href="{% url 'account:logout' %}">logout</a>
+    <h1>پنل کاربری</h1>
+    <table>
+        <tr>
+            <th>نام: {{ profile.user.first_name }}</th>
+        </tr>
+        <tr>
+            <th>نام خانوادگی: {{ profile.user.last_name }}</th>
+        </tr>
+        <tr>
+            <th>نام کاربری: {{ profile.user.username }}</th>
+        </tr>
+        <tr>
+            <th>ایمیل: {{ profile.user.email }}</th>
+        </tr>
+        <tr>
+            <th> شماره تفلن: {{ profile.phone }}</th>
+        </tr>
+        <tr>
+            <th> آدرس: {{ profile.address }}</th>
+        </tr>
+    </table>
+    <a href="{% url 'account:update' %}">بروزرسانی اطلاعات</a> <br/>
+    <a href="{% url 'account:change-password' %}">تغییر رمز عبور</a> <br/>
+    <a href="{% url 'account:logout' %}">خروج از حساب کاربری</a>
 {% endblock %}

@@ -1,6 +1,6 @@
 {% if messages %}
     {% for msg in messages %}
-        <div {% if msg.tags %} class="alert alert-{{ msg.tags }}" role="alert" {% endif %}>
+        <div {% if msg.tags %} class="alert alert-{{ msg.tags }}" role="alert" {% endif %} id="msg">
             {{ msg }}
         </div>
     {% endfor %}

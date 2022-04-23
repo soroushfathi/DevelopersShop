@@ -1,0 +1,32 @@
+//
+// Breadcrumbs
+// --------------------------------------------------
+
+
+.breadcrumb {
+  // padding: $breadcrumb-padding-vertical $breadcrumb-padding-horizontal;
+  // margin-bottom: $line-height-computed;
+  list-style: none;
+  // background-color: $breadcrumb-bg;
+  border-radius: $border-radius-base;
+
+  > li {
+    display: inline-block;
+    
+    + li:before {
+      // [converter] Workaround for https://github.com/sass/libsass/issues/1115
+      $nbsp: "\00a0";
+      content: "\f105";
+      font-family: 'FontAwesome', sans-serif;
+      padding: 0 16px;
+      color: $breadcrumb-color;
+      @media(max-width:$screen-xs){
+        padding: 0 5px;
+      }
+    }
+  }
+
+  > .active {
+    color: #000;
+  }
+}

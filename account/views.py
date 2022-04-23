@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponse
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from .models import Profile
+from django.contrib.auth.decorators import login_required
 
 
 def register(request):
@@ -11,14 +15,16 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            User.objects.create_user(
+            user = User.objects.create_user(
                 username=data['username'],
                 email=data['email'],
                 first_name=data['first_name'],
                 last_name=data['last_name'],
                 password=data['password1'],
             )
+            user.save()
             messages.success(request, 'ثبت نام با موفقیت انجام شد', 'success')
+            logins(request)
             return redirect('home:mainpage')
     else:
         form = RegisterForm()
@@ -44,8 +50,8 @@ def logins(request):
                 messages.error(request, 'نام کابری یا رمز رو اشتباه وارد کردی', 'danger')
     else:
         form = LoginForm()
-    context = {'form': form}
-    return render(request, 'account/login.html', context)
+        context = {'form': form}
+        return render(request, 'account/login.html', context)
 
 
 def logouts(request):
@@ -54,5 +60,49 @@ def logouts(request):
     return redirect('home:mainpage')
 
 
+@login_required(login_url='account:login')
 def dashboard(request):
-    return render(request, 'account/dashboard.html')
+    profile = Profile.objects.get(user_id=request.user.id)
+    context = {'profile': profile, }
+    return render(request, 'account/dashboard.html', context=context)
+
+
+@login_required(login_url='account:login')
+def user_update(requset):
+    if requset.method == 'POST':
+        user_form = UserUpdateForm(requset.POST, instance=requset.user)
+        profile_form = ProfileUpdateForm(requset.POST, instance=requset.user.profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(requset, 'تغییرات با موفقیت انجام شد', 'success')
+            return redirect('account:dashboard')
+    else:
+        user_form = UserUpdateForm(instance=requset.user)
+        profile_form = ProfileUpdateForm(instance=requset.user.profile)
+        context = {
+            'user_form': user_form,
+            'profile_form': profile_form,
+        }
+        return render(requset, 'account/update.html', context=context)
+
+
+@login_required(login_url='account:login')
+def change_passsword(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            messages.success(request, 'تغییر رمز با موفقیت انجام شد', 'success')
+            return redirect('account:dashboard')
+        else:
+            messages.error(request, 'رمز وارد شده اشتباه است', 'danger')
+            return redirect('account:change-password')
+
+    else:
+        form = PasswordChangeForm(request.user)
+        context = {
+            'form': form,
+        }
+        return render(request, 'account/change-password.html', context=context)

@@ -1,0 +1,20 @@
+/*
+     4.4. Icon-progress
+ */
+
+span.star {
+    color: #ffb933;
+    margin: 0 2px;
+    @include transition2;
+    &:first-child {
+        margin-left: 0;
+    }
+    &:last-child {
+        color: #bfbfbf;
+    }
+}
+
+span.star:before {
+    content: '\f005';
+    font-family: FontAwesome;
+}

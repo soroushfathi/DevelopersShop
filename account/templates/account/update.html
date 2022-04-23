@@ -1,10 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}اطلاعات حساب - تغییرات{% endblock %}
+{% block body %}
+    <h1>بروزرسانی اطلاعات حساب کاربری</h1>
+    <form action="" method="post">
+    {% csrf_token %}
+{#        {{ user_form.as_p }}#}
+{#        {{ profile_form.as_p }}#}
+        <label>نام کاربری
+            {{ user_form.username }}
+        </label> <br/><br/>
+        <label>نام
+            {{ user_form.first_name}}
+        </label> <br/><br/>
+        <label>نام خانوادگی
+            {{ user_form.last_name }}
+        </label> <br/><br/>
+        <label>آدرس
+            {{ profile_form.address }}
+        </label> <br/><br/>
+
+        <button type="submit">تایید</button>
+    </form>
+{% endblock %}

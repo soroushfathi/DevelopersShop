@@ -1,0 +1,100 @@
+/**
+	
+ **/
+
+/*------------------------------------------------------------------
+[Table of contents]
+
+	1. Import vendor
+		1.1. Vendor
+			1.1.1. Google fonts
+			1.1.2. Icon Fonts
+			1.1.3. Vendor library
+		1.2. Bootstrap
+	2. Reset
+		2.1. Reset
+		2.2. Default base
+			2.2.1.	Button
+			2.2.2.	Link
+			2.2.3.	Typo
+			2.2.4.	Heading
+			...
+		2.3. Variable
+	3. Mixins
+	4. Elements
+		4.1. About page
+		4.2. Banner
+		4.3. Blog
+		4.4. Icon-progress
+		4.5. Popup
+		4.6. Slide
+		4.7. Contact page
+		4.8. 404 Error page
+	5. Ecommerce
+		5.1. Cart Page
+		5.2. Item view templates
+		5.3. Checkout Page
+		5.4. Newsletter 
+		5.5. Single product detail page
+	6. Layout
+		6.1. Header
+			6.1.1. Header version 1
+			6.1.2. Header version 2
+			6.1.3. Header version 3
+			6.1.4. Header version 4
+			6.1.5. Header version 5
+		6.2. Footer
+			6.2.1 Footer version 1
+		6.3. Homepages
+			6.3.1. Home 1
+			6.3.2. Home 2
+			6.3.3. Home 3
+			6.3.4. Home 4
+			6.3.5. Home 5
+		6.4. Other Page
+			6.4.1 My account
+		6.5. Commingsoon
+			6.5.1 Commingsoon Page
+	7.Responsive
+		7.1. FullHD
+			7.1.1 FullHD
+			7.1.2 Min Fullhd
+		7.2. Desktop
+			7.2. Max Desktop
+		7.3. Table
+			7.3.1. tablet
+			7.3.2. Max tablet
+		7.4. Mobile
+			7.4.1. mobile
+			7.4.2. Max mobile
+-------------------------------------------------------------------*/
+
+
+/** 1. Import vendor **/
+@import "components/vendor";
+
+/** 1.2. Bootstrap **/
+@import "bootstrap";
+/** 1.2. Bootstrap **/
+
+/** 1.3. Animation **/
+//@import "components/vendor/animation";
+
+/** 2. Reset **/
+@import "components/variable";
+/** 3. Mixins **/
+@import "components/mixin";
+@import "components/base";
+@import "components/reset";
+
+/** 4. Elements **/
+@import "components/elements";
+
+/** 5. Ecommerce **/
+@import "components/ecommerce";
+
+/** 6. Templates Layout **/
+@import "components/layout";
+
+/** 7. Templates Layout **/
+@import "components/Responsive";

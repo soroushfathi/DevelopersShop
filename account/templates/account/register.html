@@ -1,28 +1,32 @@
 {% extends 'base.html' %}
-{% block title %}register{% endblock %}
+{% load static %}
+{% block title %}ثبت نام{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'account/css/register.css' %}">
+{% endblock %}
 {% block body %}
-    <h1>Register</h1>
+    <h1>ثبت نام</h1>
     <form action="" method="post">
     {% csrf_token %}
-        <label> username
-            <input type="text" name="username" placeholder="" />
-        </label> <br>
-        <label> email
-            <input type="text" name="email" placeholder="" />
-        </label> <br>
-        <label> first name
-            <input type="text" name="first_name" placeholder="" />
-        </label> <br>
-        <label> last name
-            <input type="text" name="last_name" placeholder="" />
-        </label> <br>
-        <label> password
-            <input type="text" name="password1" placeholder="" />
-        </label> <br>
-        <label> retype password
-            <input type="text" name="password2" placeholder="" />
-        </label> <br>
-
-        <button type="submit">register</button>
+        {{ form.as_p }}
+{#        <label> نام کاربری#}
+{#            <input type="text" name="username" placeholder="" />#}
+{#        </label> <br>#}
+{#        <label> ایمیل#}
+{#            <input type="text" name="email" placeholder="" />#}
+{#        </label> <br>#}
+{#        <label> first name#}
+{#            <input type="text" name="first_name" placeholder="" />#}
+{#        </label> <br>#}
+{#        <label> last name#}
+{#            <input type="text" name="last_name" placeholder="" />#}
+{#        </label> <br>#}
+{#        <label> رمز#}
+{#            <input type="text" name="password1" placeholder="" />#}
+{#        </label> <br>#}
+{#        <label> تکرار رمز#}
+{#            <input type="text" name="password2" placeholder="" />#}
+{#        </label> <br>#}
+        <button type="submit">ثبت نام</button>
     </form>
 {% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}همه محصولات{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="btn-group">
+            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                دسته بندی ها
+            </button>
+            <div class="dropdown-menu">
+                {% for cat in category %}
+                    <a class="dropdown-item" href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        {% for product in products %}
+            <a href="{{ product.get_absolute_url }}">
+                <h3>{{ product.name }}</h3>
+                <img src="{{ product.image.url }}" style="width: 110px; height: 110px;" alt=""/>
+            </a>
+            {% if product.discount %}
+                <h4>تخفیف: {{ product.unit_price }}</h4>
+                <h3>قیمت نهایی: {{ product.total_price }}</h3>
+            {% else %}
+                <h3>{{ product.total_price }}</h3>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

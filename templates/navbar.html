@@ -1,36 +1,185 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'home:mainpage' %}">Devs Shop</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          {% if not user.is_authenticated %}
-            <li class="nav-item"> <a class="nav-link" href="{% url 'account:register' %}">ثبت نام</a> </li>
-            <li class="nav-item"> <a class="nav-link" href="{% url 'account:login' %}">ورود</a> </li>
-          {% else %}
-            <li class="nav-item"> <a class="nav-link" href="{% url 'account:dashboard' %}">پنل کاربری</a> </li>
-          {% endif %}
-          <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled">Disabled</a>
-        </li>
-      </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+{% load static %}
+<!-- push menu-->
+<div class="pushmenu menu-home5">
+    <div class="menu-push">
+        <span class="close-left js-close"><i class="icon-close f-20"></i></span>
+        <div class="clearfix"></div>
+        <form role="search" method="get" id="searchform" class="searchform" action="/search">
+            <div>
+                <label class="screen-reader-text" for="q"></label>
+                <input type="text" placeholder="جستجو در میان محصولات ..." value="" name="q" id="q"
+                       autocomplete="off"><input type="hidden" name="type" value="product">
+                <button type="submit" id="searchsubmit"><i class="ion-ios-search-strong"></i></button>
+            </div>
+        </form>
+        <ul class="nav-home5 js-menubar">
+            <li class="level1 active dropdown"><a href="#">صفحه نخست</a>
+                <span class="icon-sub-menu"></span>
+                <ul class="menu-level1 js-open-menu">
+                    <li class="level2"><a href="home1.html" title="">سبک یک</a></li>
+                    <li class="level2"><a href="home2.html" title="">سبک دو</a></li>
+                    <li class="level2"><a href="home3.html" title="">سبک سه</a></li>
+                    <li class="level2"><a href="home4.html" title="">سبک چهار</a></li>
+                    <li class="level2"><a href="home5.html" title="">سبک پنج</a></li>
+                    <li class="level2"><a href="#" title="">سبک شش</a></li>
+
+                </ul>
+            </li>
+            <li class="level1 active dropdown"><a href="#">لیست محصولات</a>
+                <span class="icon-sub-menu"></span>
+                <div class="menu-level1 js-open-menu">
+                    <ul class="level1">
+                        <li class="level2">
+                            <a href="#">سبک های مختلف</a>
+                            <ul class="menu-level-2">
+                                <li class="level3"><a href="shop_full.html" title="">سبک تمام عرض</a></li>
+                                <li class="level3"><a href="shopgrid_v1.html" title="">سبک گرید یک</a></li>
+                                <li class="level3"><a href="shopgrid_v2.html" title="">سبک گرید دو</a></li>
+                                <li class="level3"><a href="shoplist.html" title="">سبک عادی</a></li>
+                                <li class="level3"><a href="shopleft_sidebar.html" title="">با ستون کناری چپ</a></li>
+                                <li class="level3"><a href="shopright_sidebar.html" title="">با ستون کناری راست</a></li>
+                            </ul>
+                        </li>
+                        <li class="level2">
+                            <a href="#">سبک دسته بندیها</a>
+                            <ul class="menu-level-2">
+                                <li class="level3"><a href="cat_fullwidth.html" title="">سبک تمام عرض</a></li>
+                                <li class="level3"><a href="cat_left_sidebar.html" title="">با ستون کناری چپ</a></li>
+                                <li class="level3"><a href="cat_right_sidebar.html" title="">با ستون کناری راست</a></li>
+                            </ul>
+                        </li>
+                        <li class="level2">
+                            <a href="#">سبک های نمونه محصول</a>
+                            <ul class="menu-level-2">
+                                <li class="level3"><a href="bundle.html" title="">سبک عادی</a></li>
+                                <li class="level3"><a href="pin_product.html" title="">پین محصول</a></li>
+                                <li class="level3"><a href="360degree.html" title="">حالت 360 درجه</a></li>
+                                <li class="level3"><a href="feature_video.html" title="">با امکان ویدیوی محصول</a></li>
+                                <li class="level3"><a href="simple.html">سبک ساده</a></li>
+                                <li class="level3"><a href="variable.html">سبک متغیر</a></li>
+                                <li class="level3"><a href="affilate.html">سبک همکاری در فروش</a></li>
+                                <li class="level3"><a href="grouped.html">سبک گروهی</a></li>
+                                <li class="level3"><a href="outofstock.html">سبک ناموجودی محصول</a></li>
+                                <li class="level3"><a href="onsale.html">سبک حراجی</a></li>
+                            </ul>
+                        </li>
+                        <li class="level2">
+                            <a href="#">طرح های نمونه محصول</a>
+                            <ul class="menu-level-2">
+                                <li class="level3"><a href="product_extended.html" title="">طرح عادی</a></li>
+                                <li class="level3"><a href="product_sidebar.html" title="">با ستون کناری چپ</a></li>
+                                <li class="level3"><a href="product_right_sidebar.html" title="">با ستون کناری راست</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="level2">
+                            <a href="#">دیگر صفحات</a>
+                            <ul class="menu-level-2">
+                                <li class="level3"><a href="shop_full.html" title="">لیست محصولات</a></li>
+                                <li class="level3"><a href="cart.html" title="">سبد خرید</a></li>
+                                <li class="level3"><a href="wishlist.html" title="">علاقه مندیها</a></li>
+                                <li class="level3"><a href="checkout.html" title="">صورتحساب</a></li>
+                                <li class="level3"><a href="myaccount.html" title="">حساب من</a></li>
+                                <li class="level3"><a href="track.html" title="">رهگیری سفارشات</a></li>
+                                <li class="level3"><a href="quickview.html" title="">نمایش سریع</a></li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+            </li>
+            <li class="level1 active dropdown"><a href="#">مگامنو</a></li>
+            <li class="level1">
+                <a href="#">صفحات</a>
+                <span class="icon-sub-menu"></span>
+                <ul class="menu-level1 js-open-menu">
+                    <li class="level2"><a href="aboutus.html" title="">درباره ما </a></li>
+                    <li class="level2"><a href="contactus.html" title="">ارتباط با ما</a></li>
+                    <li class="level2"><a href="faq.html" title="">پرسش های متداول</a></li>
+                    <li class="level2"><a href="404.html" title="">404</a></li>
+                    <li class="level2"><a href="commingsoon.html" title="">بزودی</a></li>
+                </ul>
+            </li>
+            <li class="level1">
+                <a href="#">نوشته های وبلاگ</a>
+                <span class="icon-sub-menu"></span>
+                <ul class="menu-level1 js-open-menu">
+                    <li class="level2"><a href="blog-standar.html" title="">سبک استاندارد</a></li>
+                    <li class="level2"><a href="blog_grid.html" title="">سبک گرید</a></li>
+                    <li class="level2"><a href="blog-standar.html" title="">با ستون کناری</a></li>
+                    <li class="level2"><a href="blog-single-post.html" title="">نوشته وبلاگ</a></li>
+                </ul>
+            </li>
+        </ul>
     </div>
-  </div>
-</nav>
+</div>
+<!-- end push menu-->
+<header id="header" class="header-v1">
+    <div class="header-top-banner">
+        <a href="#"><img src="{% static 'img/banner-top.jpg' %}" alt="" class="img-reponsive"></a>
+    </div>
+    <div class="topbar">
+        <div class="container container-240">
+            <div class="row flex">
+                <div class="col-md-6 col-sm-6 col-xs-4 flex-left">
+                    <div class="topbar-left">
+                        <div class="element element-store hidden-xs hidden-sm">
+                            <a id="label1" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">
+                                <img src="{% static 'img/icon-map.png' %}" alt="">
+                                <span>فروشگاه محلی</span>
+
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="label1">
+                                <li><a href="#">ایران</a></li>
+                                <li><a href="#">تهران</a></li>
+                                <li><a href="#">شهرک غرب</a></li>
+                            </ul>
+                        </div>
+                        <div class="element hidden-xs hidden-sm">
+                            <a href="#"><img src="{% static 'img/icon-track.png' %}" alt=""><span>رهگیری سفارشات</span></a>
+                        </div>
+                        <div class="element element-account hidden-md hidden-lg">
+                            <a href="{% url 'account:dashboard' %}">حساب من</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-8 flex-right">
+                    <div class="topbar-right">
+                        <div class="element hidden-xs hidden-sm">
+                            <a href="{% url 'home:mainpage' %}">صفحه اصلی | لوگو</a>
+                        </div>
+                        <div class="element hidden-xs hidden-sm">
+                            <a href="{% url 'home:products' %}">همه محصولات</a>
+                        </div>
+                        {% if user.is_authenticated %}
+                            <div class="element hidden-xs hidden-sm">
+                                <a href="{% url 'account:dashboard' %}">حساب من</a>
+                            </div>
+                        {% else %}
+                            <div class="element hidden-xs hidden-sm">
+                                <a href="{% url 'account:register' %}"> ثبت نام </a>
+                            </div>
+                            <div class="element hidden-xs hidden-sm">
+                                <a href="{% url 'account:login' %}">ورود</a>
+                            </div>
+                        {% endif %}
+                        <div class="element element-leaguage">
+                            <a id="label2" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false">
+                                <img src="{% static 'img/icon-l.png' %}" alt="">
+                                <span>پارسی</span>
+                                <span class="ion-ios-arrow-down f-10 e-arrow"></span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="label2">
+                                <li><a href="#">English</a></li>
+                                <li><a href="#">پارسی</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
