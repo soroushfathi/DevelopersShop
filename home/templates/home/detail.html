@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/comments-and-rating.css' %}">
+{% endblock %}
 {% block body %}
     <div class="container">
         <h2>{{ product.name }}</h2><br/>
@@ -37,6 +41,60 @@
         {% for tag in similar %}
             <a href="{{ tag.get_absolute_url }}"><img src="{{ tag.image.url }}" alt=""
                                                       style="height: 100px; width: 100px;"></a>
+        {% endfor %}
+        <div class="row comment">
+            <div class="col-6">
+                <form method="post" action="{% url 'home:comment' product.id %}">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="comment-box">
+                                    <h4>نظر بدهید!</h4>
+                                    <div class="rating">
+                                        <input type="radio" name="rate" value="5" id="5"><label for="5"></label>
+                                        <input type="radio" name="rate" value="4" id="4"><label for="4"></label>
+                                        <input type="radio" name="rate" value="3" id="3"><label for="3"></label>
+                                        <input type="radio" name="rate" value="2" id="2"><label for="2"></label>
+                                        <input type="radio" name="rate" value="1" id="1"><label for="1"></label>
+                                    </div>
+                                    <div class="comment-box">
+                                        <label>
+                                            <textarea name="submit" class="form-control" rows="4"></textarea>
+                                        </label>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-danger">ارسال نظر</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <hr>
+
+            </div>
+        </div>
+        {% for comment in comments %}
+            <div class="card bg-dark text-white">
+                <div class="row comment-rating">
+                    <div class="col-8">
+                        <p>{{ comment.user.username }}</p>
+                    </div>
+                    <div class="col-4">
+                        <div class="comment-rating">
+                            <i class="fa fa-star{% if comment.rate < 1 %}-o empty  {% endif %}"></i>
+                            <i class="fa fa-star{% if comment.rate < 2 %}-o empty  {% endif %}"></i>
+                            <i class="fa fa-star{% if comment.rate < 3 %}-o empty  {% endif %}"></i>
+                            <i class="fa fa-star{% if comment.rate < 4 %}-o empty  {% endif %}"></i>
+                            <i class="fa fa-star{% if comment.rate < 5 %}-o empty  {% endif %}"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <p>{{ comment.comment }}</p>
+                </div>
+            </div>
         {% endfor %}
     </div>
 {% endblock %}

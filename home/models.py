@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ModelForm
 from django.urls import reverse
 from ckeditor.fields import RichTextField
 from taggit.managers import TaggableManager
@@ -122,3 +123,9 @@ class Comment(models.Model):
 
     def __str__(self):
         return '{}, {}'.format(self.user.username, self.product.name)
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['comment', 'rate']

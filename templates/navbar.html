@@ -141,17 +141,17 @@
                             <a href="#"><img src="{% static 'img/icon-track.png' %}" alt=""><span>رهگیری سفارشات</span></a>
                         </div>
                         <div class="element element-account hidden-md hidden-lg">
-                            <a href="{% url 'account:dashboard' %}">حساب من</a>
+                            <a href="{% url 'account:dashboard' %}"><i class="account-element">حساب من</i></a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-8 flex-right">
                     <div class="topbar-right">
                         <div class="element hidden-xs hidden-sm">
-                            <a href="{% url 'home:mainpage' %}">صفحه اصلی | لوگو</a>
+                            <a href="{% url 'home:mainpage' %}"><i class="fa fa-home">خانه</i></a>
                         </div>
                         <div class="element hidden-xs hidden-sm">
-                            <a href="{% url 'home:products' %}">همه محصولات</a>
+                            <a href="{% url 'home:products' %}"><i class="fa">همه محصولات</i></a>
                         </div>
                         {% if user.is_authenticated %}
                             <div class="element hidden-xs hidden-sm">

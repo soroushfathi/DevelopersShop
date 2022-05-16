@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Variant, Size, Color
+from .models import Category, Product, Variant, Size, Color, Comment
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -31,8 +31,13 @@ class ColorAdmin(admin.ModelAdmin):
     list_display = ('name', 'id')
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('user', 'product', 'comment')
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Size, SizeAdmin)
 admin.site.register(Color, ColorAdmin)
 admin.site.register(Variant)
+admin.site.register(Comment, CommentAdmin)
