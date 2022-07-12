@@ -77,18 +77,19 @@ class Product(models.Model):
             return False
 
 
-class Size(models.Model):
-    name = models.CharField(max_length=50)
-
-    def __str__(self):
-        return self.name
-
-
 class Color(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name
+
+
+class Size(models.Model):
+    name = models.CharField(max_length=50)
+    color = models.ForeignKey(Color, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return f'{self.name}, {self.color}'
 
 
 class Variant(models.Model):
