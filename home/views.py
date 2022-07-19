@@ -1,16 +1,20 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Category, Product, Variant, CommentForm, Comment, ReplyForm, Images
+from .forms import SearchForm
 from django.contrib import messages
+from django.db.models import Q
 
 
 def mainpage(request):
     categories = Category.objects.filter(is_subcategory=False)
-    return render(request, 'home/home.html', {'categories': categories})
+    form = SearchForm()
+    return render(request, 'home/home.html', {'categories': categories, 'form': form})
 
 
 def all_products(request, slug=None):
     category = Category.objects.filter(is_subcategory=False)
+    form = SearchForm()
     products = Product.objects.all()
     if slug:
         # data = Category.objects.get(slug=slug)
@@ -19,6 +23,7 @@ def all_products(request, slug=None):
     context = {
         'products': products,
         'category': category,
+        'form': form,
     }
     return render(request, 'home/products.html', context=context)
 
@@ -102,3 +107,14 @@ def comment_like(request, cid):
     else:
         messages.success(request, 'برای لایک کامنت ابتدا باید وارد شوید', 'danger')
     return redirect(url)
+
+
+def product_search(request):
+    products = Product.objects.all()
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data['search']
+            if data is not None:
+                products = products.filter(Q(name__search=data))
+            return render(request, 'home/products.html', {'products': products, 'form': form})

@@ -11,5 +11,5 @@ urlpatterns = [
     path('comment/<int:pid>/', views.product_comment, name='comment'),
     path('reply/<int:pid>/<int:comment_id>/', views.comment_reply, name='reply_comment'),
     path('like_comment/<int:cid>', views.comment_like, name='comment_like'),
-
+    path('search/', views.product_search, name='product_search')
 ]

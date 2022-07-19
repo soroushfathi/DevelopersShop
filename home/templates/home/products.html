@@ -2,6 +2,11 @@
 {% block title %}همه محصولات{% endblock %}
 {% block body %}
     <div class="container">
+        <form method="post" action="{% url 'home:product_search' %}">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit">Search</button>
+        </form>
         <div class="btn-group">
             <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
@@ -13,17 +18,21 @@
                 {% endfor %}
             </div>
         </div>
-        {% for product in products %}
-            <a href="{{ product.get_absolute_url }}">
-                <h3>{{ product.name }}</h3>
-                <img src="{{ product.image.url }}" style="width: 110px; height: 110px;" alt=""/>
-            </a>
-            {% if product.discount %}
-                <h4>تخفیف: {{ product.unit_price }}</h4>
-                <h3>قیمت نهایی: {{ product.total_price }}</h3>
-            {% else %}
-                <h3>{{ product.total_price }}</h3>
-            {% endif %}
-        {% endfor %}
+        <div class="row">
+            {% for product in products %}
+                <div class="col-3">
+                    <a href="{{ product.get_absolute_url }}">
+                        <h3>{{ product.name }}</h3>
+                        <img src="{{ product.image.url }}" style="width: 110px; height: 110px;" alt=""/>
+                    </a>
+                    {% if product.discount %}
+                        <h4>تخفیف: {{ product.unit_price }}</h4>
+                        <h3>قیمت نهایی: {{ product.total_price }}</h3>
+                    {% else %}
+                        <h3>{{ product.total_price }}</h3>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

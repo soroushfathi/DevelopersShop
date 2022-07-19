@@ -6,10 +6,15 @@
 {% endblock %}
 {% block body %}
     <div class="container">
+        <form method="post" action="{% url 'home:product_search' %}">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit">Search</button>
+        </form>
         {% for category in categories %}
             <a href="{{ category.get_absolute_url }}">
                 <h3>{{ category.name }}</h3>
-                <img src="{{ category.image.url }}" style="width: 110px; height: 110px;" alt=""/>
+                <img src="{{ category.image.url }}" style="width: 110px; height: 110px; border-radius: 8px; box-shadow: #1d1d1d 2px 1px 5px;" alt=""/>
             </a>
         {% endfor %}
     </div>
