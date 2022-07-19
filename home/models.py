@@ -117,10 +117,17 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='comments')
     comment = models.TextField()
+    # todo: like & dislike a comment
     rate = models.PositiveIntegerField(default=0)
     create = models.DateTimeField(auto_now_add=True)
-    reply = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='comment_reply')
+    reply = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='comment_replied')
     is_reply = models.BooleanField(default=False)
+    like = models.ManyToManyField(User, blank=True, related_name='comment_liked')
+    like_count = models.PositiveIntegerField(default=0)
+
+    @property
+    def like_count(self):
+        return self.like.count()
 
     def __str__(self):
         return '{}, {}'.format(self.user.username, self.product.name)
@@ -130,3 +137,15 @@ class CommentForm(ModelForm):
     class Meta:
         model = Comment
         fields = ['comment', 'rate']
+
+
+class ReplyForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['comment']
+
+
+class Images(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, blank=True)
+    image = models.ImageField(upload_to='image/', blank=True)
