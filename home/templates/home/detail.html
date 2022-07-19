@@ -9,11 +9,12 @@
         <img src="{{ product.image.url }}" style="width: 110px; height: 110px;" alt=""/>
         <p>{{ product.information | safe }}</p>
         <hr/>
-        {% if request.user.is_authenticated %}
-            <a href="{% url 'home:like' product.id %}" class="btn btn-info">lile: {{ product.like_count }}</a>
+        {% if is_liked %}
+            <a href="{% url 'home:like' product.id %}" class="btn btn-danger">dislike</a>
+        {% else %}
+            <a href="{% url 'home:like' product.id %}" class="btn btn-info">like</a>
         {% endif %}
-        {% if is_like %}
-        {% endif %}
+        <span class="btn-success">likes = {{ product.like_count }}</span>
         <br/>
         {% if product.status == 'Size' %}
             <form action="" method="POST">
@@ -53,16 +54,15 @@
                                 <div class="comment-box">
                                     <h4>نظر بدهید!</h4>
                                     <div class="rating">
-                                        <input type="radio" name="rate" value="5" id="5"><label for="5"></label>
-                                        <input type="radio" name="rate" value="4" id="4"><label for="4"></label>
-                                        <input type="radio" name="rate" value="3" id="3"><label for="3"></label>
-                                        <input type="radio" name="rate" value="2" id="2"><label for="2"></label>
-                                        <input type="radio" name="rate" value="1" id="1"><label for="1"></label>
+                                        <input type="radio" name="rate" value="5" id="5"><label for="5">&star;</label>
+                                        <input type="radio" name="rate" value="4" id="4"><label for="4">&star;</label>
+                                        <input type="radio" name="rate" value="3" id="3"><label for="3">&star;</label>
+                                        <input type="radio" name="rate" value="2" id="2"><label for="2">&star;</label>
+                                        <input type="radio" name="rate" value="1" id="1"><label for="1">&star;</label>
                                     </div>
+                                    <br/>
                                     <div class="comment-box">
-                                        <label>
-                                            <textarea name="submit" class="form-control" rows="4"></textarea>
-                                        </label>
+                                        <textarea name="comment" class="form-control" rows="4" required  oninvalid="setCustomValidity('باکس نظر نباید خالی باشد')"></textarea>
                                     </div>
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-danger">ارسال نظر</button>
@@ -73,14 +73,13 @@
                     </div>
                 </form>
                 <hr>
-
             </div>
         </div>
         {% for comment in comments %}
             <div class="card bg-dark text-white">
                 <div class="row comment-rating">
                     <div class="col-8">
-                        <p>{{ comment.user.username }}</p>
+                        <p><b>{{ comment.user.username }}</b>:</p>
                     </div>
                     <div class="col-4">
                         <div class="comment-rating">
@@ -93,8 +92,30 @@
                     </div>
                 </div>
                 <div class="row">
-                    <p>{{ comment.comment }}</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ comment.comment }}</p>
                 </div>
+                <div class="row">
+                    <div class="p-2 m-2">
+                        <a href="{% url 'home:comment_like' comment.id %}" class="like m-2 cursor">
+                            <i class="fa fa-thumbs-o-up"></i>
+                            <span>like:</span>
+                            {{ comment.like_count }}
+                        </a>
+                    </div>
+                </div>
+                <form method="post" action="{% url 'home:reply_comment' product.id comment.id %}">
+                    {% csrf_token %}
+                    <textarea name="comment" id="comment" class="form-control" placeholder="reply..." rows="4" required oninvalid="setCustomValidity('باکس نظر نباید خالی باشد')"></textarea>
+                    <div class="mt-2">
+                        <button type="submit" class="btn btn-info">ثبت ریپلای</button>
+                    </div>
+                </form>
+                {% for recom in comment.comment_replied.all %}
+                    <div class="bg-secondary text-white mt-2 pl-2">
+                        <p><b>{{ recom.user.username }}:</b></p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;{{ recom.comment }}</p>
+                    </div>
+                {% endfor %}
             </div>
         {% endfor %}
     </div>
