@@ -3,35 +3,39 @@
 {% block body %}
     <div class="container">
         <form method="post" action="{% url 'home:product_search' %}">
-            {% csrf_token %}
-            {{ form }}
-            <button type="submit">Search</button>
+            <div class="form-group col-3">
+                {% csrf_token %}
+                <input name="search" class="form-control" type="text" placeholder="search here…"/>
+{#                {{ form.as_p }}#}
+                <button type="submit" class="btn btn-outline-primary">Search</button>
+            </div>
         </form>
-        <div class="btn-group">
+        <div class="btn-info row col-1" style="box-shadow: #1d1d1d 1px 3px 3px;">
             <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
+                    aria-expanded="false" style="font-size: 12px;">
                 دسته بندی ها
             </button>
             <div class="dropdown-menu">
                 {% for cat in category %}
-                    <a class="dropdown-item" href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
+                    <a class="dropdown-item text-center" href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
                 {% endfor %}
             </div>
         </div>
-        <div class="row">
+        <div class="row pt-2">
             {% for product in products %}
-                <div class="col-3">
+                <div class="col-2 bg-warning mb-4 mt-2" style="box-shadow: #761c19 2px 5px 5px; border-radius: 5px;">
                     <a href="{{ product.get_absolute_url }}">
                         <h3>{{ product.name }}</h3>
-                        <img src="{{ product.image.url }}" style="width: 110px; height: 110px;" alt=""/>
+                        <img src="{{ product.image.url }}" style="width: 120px; height: 120px; box-shadow: #1d1d1d 0 0 12px; margin: 3px;" alt=""/>
                     </a>
                     {% if product.discount %}
-                        <h4>تخفیف: {{ product.unit_price }}</h4>
-                        <h3>قیمت نهایی: {{ product.total_price }}</h3>
+                        <h4> <span style="text-decoration: line-through; color: red;">{{ product.unit_price }}</span></h4>
+                        <h3 style="color: #2b542c">قیمت نهایی: {{ product.total_price }}</h3>
                     {% else %}
-                        <h3>{{ product.total_price }}</h3>
+                        <h3 style="color: #2b542c">قیمت: {{ product.total_price }}</h3>
                     {% endif %}
                 </div>
+                <div class="col-1"></div>
             {% endfor %}
         </div>
     </div>

@@ -6,16 +6,19 @@
 {% block body %}
     <div class="container">
         <h2>{{ product.name }}</h2><br/>
-        <img src="{{ product.image.url }}" style="width: 110px; height: 110px;" alt=""/>
+        <img src="{{ product.image.url }}" style="width: 140px; height: 140px;  box-shadow: #2f56ff 0 0 8px;" alt=""/>
         <p>{{ product.information | safe }}</p>
-        <hr/>
         {% if is_liked %}
-            <a href="{% url 'home:like' product.id %}" class="btn btn-danger">dislike</a>
+            <a href="{% url 'home:like' product.id %}">
+                <img src="{% static 'img/index50.png' %}" alt="">
+            </a>
         {% else %}
-            <a href="{% url 'home:like' product.id %}" class="btn btn-info">like</a>
+            <a href="{% url 'home:like' product.id %}">
+                <img src="{% static 'img/index2-50png.png' %}" alt="">
+            </a>
         {% endif %}
-        <span class="btn-success">likes = {{ product.like_count }}</span>
-        <br/>
+        <span class="btn btn-info">like:{{ product.like_count }}</span>
+        <hr/>
         {% if product.status == 'Size' %}
             <form action="" method="POST">
                 {% csrf_token %}
@@ -37,12 +40,41 @@
                 {% endfor %}
             </form>
         {% endif %}
-        <hr>
-        {% for tag in similar %}
-            <h3>محصولات مشابه</h3>
-            <a href="{{ tag.get_absolute_url }}"><img src="{{ tag.image.url }}" alt=""
-                                                      style="height: 80px; width: 80px;"></a>
-        {% endfor %}
+        <br>
+        <div class="cart bg-danger col-3 text-center mb-2" style="border-radius: 4px;">
+            <h5 style="font-size: 16px;">قیمت مدل انتخابی شما:
+                {% if product.status != 'None' %}
+                    {{ variant.total_price }}
+                {% else %}
+                    {{ product.total_price }}
+                {% endif %}
+            </h5>
+        </div>
+        <div class="cart">
+            {% if product.status != 'None' %}
+                <form method="post" action="{% url 'cart:add_cart' product.id %}">
+                    {% csrf_token %}
+                    <input type="text" name="select" value="{{ variant.id }}">
+                    <input type="number" name="quantity" min="1" value="1" max="{{ variant.amount }}">
+                    <button type="submit">افزودن به سبد خرید</button>
+                </form>
+            {% else %}
+                <form method="post" action="{% url 'cart:add_cart' product.id %}">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" min="1" value="1" max="{{ product.amount }}"
+                    required oninvalid="setCustomValidity('تعداد بیش از حد موجودی است')">
+                    <button type="submit">افزودن به سبد خرید</button>
+                </form>
+            {% endif %}
+        </div>
+        <h3>محصولات مشابه</h3><br>
+        <div class="row ml-2">
+            {% for tag in similar %}
+                <a href="{{ tag.get_absolute_url }}">
+                    <img src="{{ tag.image.url }}" alt="" style="height: 80px; width: 80px; box-shadow: #2f56ff 1px 1px 5px; border-radius: 3px">
+                </a>
+            {% endfor %}
+        </div>
         <hr>
         <div class="row comment">
             <div class="col-6">
@@ -75,6 +107,7 @@
                 <hr>
             </div>
         </div>
+        <h4> {{ product.id }}میانگین رضایت: </h4>
         {% for comment in comments %}
             <div class="card bg-dark text-white">
                 <div class="row comment-rating">
