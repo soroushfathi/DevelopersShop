@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Category, Product, Variant, CommentForm, Comment, ReplyForm, Images
+from cart.models import Cart, CartForm
 from .forms import SearchForm
 from django.contrib import messages
 from django.db.models import Q
@@ -15,6 +16,21 @@ def mainpage(request):
 def all_products(request, slug=None):
     category = Category.objects.filter(is_subcategory=False)
     form = SearchForm()
+    '''
+    if we want to search in this view
+    remove method and change action of form
+    '''
+    # if 'search' in request.GET:
+    #     form = SearchForm(request.GET)
+    #     if form.is_valid():
+    #         data = form.cleaned_data['search']
+    #         if data is not None:
+    #             products = products.filter(Q(name__contains=data))
+    #         if not products.exists():
+    #             messages.error(request, 'محصولی با اسم \"{}\" یافت نشد'.format(data), 'danger')
+    #     else:
+    #         messages.error(request, 'مقدار سرچ نباید خالی باشد', 'danger')
+    #     return render(request, 'home/products.html', {'products': products, 'form': form})
     products = Product.objects.all()
     if slug:
         # data = Category.objects.get(slug=slug)
@@ -35,6 +51,7 @@ def product_detail(request, slug):
     comment_form = CommentForm()
     comments = Comment.objects.filter(product__slug=slug, is_reply=False)
     similar = product.tags.similar_objects()[:8]
+    cart_form = CartForm()
     is_liked = False
     if product.like.filter(id=request.user.id).exists():
         is_liked = True
@@ -47,12 +64,13 @@ def product_detail(request, slug):
             variant = Variant.objects.get(id=variants[0].id)
         context = {
             'product': product, 'variant': variant, 'variants': variants, 'similar': similar,
-            'is_liked': is_liked, 'comment_form': comment_form, 'comments': comments,
+            'is_liked': is_liked, 'comment_form': comment_form, 'comments': comments, 'cart_form': cart_form,
         }
         return render(request, 'home/detail.html', context=context)
     else:
         return render(request, 'home/detail.html', {
-            'product': product, 'similar': similar, 'comment_form': comment_form, 'comments': comments,
+            'product': product, 'similar': similar, 'comment_form': comment_form,
+            'comments': comments, 'cart_form': cart_form, 'is_liked': is_liked,
         })
 
 
@@ -116,5 +134,12 @@ def product_search(request):
         if form.is_valid():
             data = form.cleaned_data['search']
             if data is not None:
-                products = products.filter(Q(name__search=data))
-            return render(request, 'home/products.html', {'products': products, 'form': form})
+                products = products.filter(Q(name__contains=data))
+            if not products.exists():
+                messages.error(request, 'محصولی با اسم \"{}\" یافت نشد'.format(data), 'danger')
+        else:
+            messages.error(request, 'مقدار سرچ نباید خالی باشد', 'danger')
+        return render(request, 'home/products.html', {'products': products, 'form': form})
+    else:
+        messages.error(request, 'دست نکن یچه :)', 'danger')
+        return render(request, 'home/products.html', {'products': products})
