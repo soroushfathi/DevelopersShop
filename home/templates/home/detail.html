@@ -41,37 +41,61 @@
             </form>
         {% endif %}
         <br>
-        <div class="cart bg-danger col-3 text-center mb-2" style="border-radius: 4px;">
-            <h5 style="font-size: 16px;">قیمت مدل انتخابی شما:
+        <div class="cart bg-info col-3 text-center mb-2 text-white" style="border-radius: 4px;">
+            <h5 class="pt-3" style="font-size: 16px;">قیمت مدل انتخابی شما:
                 {% if product.status != 'None' %}
                     {{ variant.total_price }}
                 {% else %}
                     {{ product.total_price }}
                 {% endif %}
             </h5>
+            <hr>
+            <h6>
+                {% if product.status != 'None' %}
+                    {% if variant.amount > 0 %}
+                        موجود در انبار
+                    {% else %}
+                        <span style="color: red; font-size: 14px;">
+                            اتمام موجودی
+                        </span>
+                    {% endif %}
+                {% else %}
+                    {% if product.amount > 0 %}
+                        موجود در انبار
+                    {% else %}
+                        اتمام موجودی
+                    {% endif %}
+                {% endif %}
+            </h6>
         </div>
         <div class="cart">
-            {% if product.status != 'None' %}
-                <form method="post" action="{% url 'cart:add_cart' product.id %}">
-                    {% csrf_token %}
-                    <input type="text" name="select" value="{{ variant.id }}">
-                    <input type="number" name="quantity" min="1" value="1" max="{{ variant.amount }}">
-                    <button type="submit">افزودن به سبد خرید</button>
-                </form>
-            {% else %}
-                <form method="post" action="{% url 'cart:add_cart' product.id %}">
-                    {% csrf_token %}
-                    <input type="number" name="quantity" min="1" value="1" max="{{ product.amount }}"
-                    required oninvalid="setCustomValidity('تعداد بیش از حد موجودی است')">
-                    <button type="submit">افزودن به سبد خرید</button>
-                </form>
+            {% if variant.amount > 0 %}
+                {% if product.status != 'None' %}
+                    <form method="post" action="{% url 'cart:add_cart' product.id %}" class="form-control col-2">
+                        {% csrf_token %}
+                        <input type="hidden" name="select" value="{{ variant.id }}">
+                        <input type="number" name="quantity" min="1" value="1" max="{{ variant.amount }}" required
+                               oninvalid="setCustomValidity('تعداد بیش از حد موجودی است')" class="forn-control"
+                               style="height: 25px;">
+                        <button class="btn btn-success" type="submit">افزودن به سبد خرید</button>
+                    </form>
+                {% else %}
+                    <form method="post" action="{% url 'cart:add_cart' product.id %}">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" min="1" value="1" max="{{ product.amount }}" required
+                               oninvalid="setCustomValidity('تعداد بیش از حد موجودی است')" class="form-control"
+                               style="height: 25px;">
+                        <button class="btn btn-success" type="submit">افزودن به سبد خرید</button>
+                    </form>
+                {% endif %}
             {% endif %}
         </div>
         <h3>محصولات مشابه</h3><br>
         <div class="row ml-2">
             {% for tag in similar %}
                 <a href="{{ tag.get_absolute_url }}">
-                    <img src="{{ tag.image.url }}" alt="" style="height: 80px; width: 80px; box-shadow: #2f56ff 1px 1px 5px; border-radius: 3px">
+                    <img src="{{ tag.image.url }}" alt=""
+                         style="height: 80px; width: 80px; box-shadow: #2f56ff 1px 1px 5px; border-radius: 3px">
                 </a>
             {% endfor %}
         </div>
@@ -94,7 +118,8 @@
                                     </div>
                                     <br/>
                                     <div class="comment-box">
-                                        <textarea name="comment" class="form-control" rows="4" required  oninvalid="setCustomValidity('باکس نظر نباید خالی باشد')"></textarea>
+                                        <textarea name="comment" class="form-control" rows="4" required
+                                                  oninvalid="setCustomValidity('باکس نظر نباید خالی باشد')"></textarea>
                                     </div>
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-danger">ارسال نظر</button>
@@ -138,7 +163,8 @@
                 </div>
                 <form method="post" action="{% url 'home:reply_comment' product.id comment.id %}">
                     {% csrf_token %}
-                    <textarea name="comment" id="comment" class="form-control" placeholder="reply..." rows="4" required oninvalid="setCustomValidity('باکس نظر نباید خالی باشد')"></textarea>
+                    <textarea name="comment" id="comment" class="form-control" placeholder="reply..." rows="4" required
+                              oninvalid="setCustomValidity('باکس نظر نباید خالی باشد')"></textarea>
                     <div class="mt-2">
                         <button type="submit" class="btn btn-info">ثبت ریپلای</button>
                     </div>
