@@ -3,6 +3,7 @@ from home.models import Product
 from .models import Cart, CartForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from order.forms import OrderForm
 
 
 def cart_detail(request):
@@ -13,7 +14,13 @@ def cart_detail(request):
             total += cart.variant.total_price * cart.quantity
         else:
             total += cart.product.total_price * cart.quantity
-    return render(request, 'cart/cart.html', {'carts': carts, 'total': total})
+    orderform = OrderForm()
+    context = {
+        'carts': carts,
+        'total': total,
+        'orderform': orderform,
+    }
+    return render(request, 'cart/cart.html', context=context)
 
 
 @login_required(login_url='account:login')
@@ -69,10 +76,6 @@ def add_cart(request, pid):
         return redirect(url)
     else:
         messages.error(request, 'دست نکن بچه :)', 'danger')
-
-
-def add_cart_plus(request, pid, amount):
-    pass
 
 
 @login_required(login_url='account:login')
