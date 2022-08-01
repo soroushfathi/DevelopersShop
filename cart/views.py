@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from home.models import Product
 from .models import Cart, CartForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 def cart_detail(request):
@@ -15,6 +16,7 @@ def cart_detail(request):
     return render(request, 'cart/cart.html', {'carts': carts, 'total': total})
 
 
+@login_required(login_url='account:login')
 def add_cart(request, pid):
     url = request.META.get('HTTP_REFERER')
     product = Product.objects.get(id=pid)
@@ -73,6 +75,7 @@ def add_cart_plus(request, pid, amount):
     pass
 
 
+@login_required(login_url='account:login')
 def remove_cart(request, cid):
     url = request.META.get('HTTP_REFERER')
     Cart.objects.filter(id=cid).delete()
