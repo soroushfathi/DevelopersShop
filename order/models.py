@@ -19,11 +19,16 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     create = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
-    email = models.EmailField()
+    email = models.EmailField(blank=True, null=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     address = models.CharField(max_length=1000)
-    postal_code = models.CharField(max_length=10, validators=[validate_postalcode])
+    postal_code = models.CharField(max_length=10, validators=[validate_postalcode], blank=True, null=True)
+    totalprice = models.PositiveIntegerField(blank=True, null=True)
+    discount = models.PositiveIntegerField(blank=True, null=True)
+
+    def price(self):
+        return sum(x.item_price() for x in self.items.all())
 
     def __str__(self):
         return self.user.username
@@ -40,3 +45,25 @@ class ItemOrder(models.Model):
 
     def __str__(self):
         return self.product.name
+
+    def size(self):
+        return self.variant.size.name
+
+    def color(self):
+        return self.variant.color.name
+
+    def item_price(self):
+        totalprice = 0
+        if self.product.status != 'None':
+            totalprice += self.variant.total_price * self.quantity
+        else:
+            totalprice += self.product.total_price * self.quantity
+        return totalprice
+
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=20, unique=True)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    active = models.BooleanField()
+    discount = models.PositiveIntegerField()
