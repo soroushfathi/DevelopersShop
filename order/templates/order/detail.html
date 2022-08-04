@@ -1,10 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% include 'base.html' %}
+{% block body %}
+    <div class="container">
+        <h1>سبد خرید</h1>
+        <hr>
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">ردیف</th>
+                <th scope="col">نام</th>
+                <th scope="col">کدپستی</th>
+                <th scope="col">آدرس</th>
+                <th scope="col">محصولات</th>
+                <th scope="col">قیمت نهایی</th>
+                <th scope="col">وضعیت</th>
+            </tr>
+            </thead>
+            <tbody class="table-bordered" style="font-size: 15px;">
+            {% for order in orders %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ order.first_name }}&nbsp;{{ order.last_name }}</td>
+                    <td>{{ order.postal_code }}</td>
+                    <td>{{ order.address }}</td>
+                    <td>
+                        {% for item in order.items.all %}
+                            {{ forloop.counter }}.
+                            {% if item.product.status != 'None' %}
+                                {{ item.variant.name }}&nbsp;&nbsp;
+                            {% else %}
+                                {{ item.product.name }}&nbsp;&nbsp;
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{ order.totalprice }}
+                    </td>
+                    <td>
+                        {% if order.paid %}
+                            پرداخت شده
+                        {% else %}
+                            منتظر پرداخت...
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
