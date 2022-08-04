@@ -30,3 +30,8 @@ class OrderForm(ModelForm):
         if address is None:
             raise forms.ValidationError('کدپستی نباید خالی نباشد')
         return address
+
+
+# if we set value for a field in db, we do not have extend from ModelForm
+class CouponForm(forms.Form):
+    code = forms.CharField(max_length=20)
