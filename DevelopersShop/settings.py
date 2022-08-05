@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'account.apps.AccountConfig',
     'cart.apps.CartConfig',
-    'order.apps.OrderConfig'
+    'order.apps.OrderConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -141,3 +141,11 @@ TAGGIT_CASE_INSENSATIVE = True
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email Config
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackEnd'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'soroush8fathi@gmail.com'
+EMAIL_HOST_PASSWORD = 'ayxacvodctfoslzy'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
