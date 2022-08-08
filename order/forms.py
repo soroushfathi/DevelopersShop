@@ -20,15 +20,15 @@ class OrderForm(ModelForm):
         if pc is not None:
             flags = [len(pc) != 10, '0' in pc, '2' in pc]
             if any(flags):
-                raise forms.ValidationError('کد پستی معتبر نیست')
+                raise forms.ValidationError('کد پستی معتبر نیست', code='invalid')
         else:
-            raise forms.ValidationError('کدپستی نباید خالی نباشد')
+            raise forms.ValidationError('کدپستی نباید خالی نباشد', code='required')
         return pc
 
     def clean_address(self):
         address = self.cleaned_data['address']
         if address is None:
-            raise forms.ValidationError('کدپستی نباید خالی نباشد')
+            raise forms.ValidationError('آدرس نباید خالی نباشد', code='required')
         return address
 
 
