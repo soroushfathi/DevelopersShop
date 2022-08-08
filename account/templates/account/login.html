@@ -1,10 +1,26 @@
 {% extends 'base.html' %}
 {% block title %} login {% endblock %}
 {% block body %}
-    <h1> ورود به حساب </h1>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">تایید</button>
-    </form>
+    <div class="container">
+        <h1> ورود به حساب </h1>
+        <form action="{% url 'account:login' %}" method="post">
+            {% csrf_token %}
+            {% if form %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+            <label for="username"> نام کاربری
+                <input type="text" name="user" id="username" class="form-control" placeholder=""/>
+            </label>
+            <label for="password"> رمز
+                <input type="password" name="password" id="password" class="form-control" placeholder=""/>
+            </label>
+            <button type="submit" class="btn btn-success">تایید</button>
+        </form>
+    </div>
 {% endblock %}
