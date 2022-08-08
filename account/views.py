@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -8,9 +8,26 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import Profile
 from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage
+from django.views import View
+from django.utils.encoding import force_str, force_bytes
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from six import text_type
+
+
+class EmailTokenGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        return text_type(user.profile.is_email_active) + text_type(user.id) + text_type(timestamp)
+
+
+etg = EmailTokenGenerator()
 
 
 def register(request):
+    form = RegisterForm()
+
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -19,18 +36,66 @@ def register(request):
                 username=data['username'],
                 email=data['email'],
                 first_name=data['first_name'],
-                last_name=data['last_name'],
+                # last_name=data['last_name'],
                 password=data['password1'],
             )
             user.save()
-            messages.success(request, 'ثبت نام با موفقیت انجام شد', 'success')
+            domain = get_current_site(request).domain
+            uidb64 = urlsafe_base64_encode(force_bytes(user.id))
+            url = reverse('account:email-activation', kwargs={'uidb64': uidb64, 'token': etg.make_token(user)})
+            link = 'http://' + domain + url
+            etext = '''
+                سلام {} عزیز، به سایت فروشگاه برنامه نویسان خوش اومدی، برای فعال شدن حسابت
+                روی لینک زیر کلیک کن(مدت اعتبار لینک 3 روز میباشد):\n
+                {}
+            '''.format(f'{user.first_name} {user.last_name}', link)
+            email = EmailMessage(
+                'activation email', etext, 'test<soroush8fathi@gmail.com>', [data['email']],
+            )
+            email.send(fail_silently=False)
+            messages.success(request,
+                             'ثبت نام با موفقیت انجام شد، برای فعال سازی حساب به ایمیل خود مراجعه کنید.', 'success')
             logins(request)
             return redirect('home:mainpage')
-    else:
-        form = RegisterForm()
-    context = {'form': form}
-    return render(request, 'account/register.html', context)
-    # return render(request, 'account:register', context)
+        else:
+            return render(request, 'account/register.html', {'form': form})
+    return render(request, 'account/register.html', {'form': form})
+
+
+class EmailRegister(View):
+    def get(self, request, uidb64, token):
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        try:
+            user = User.objects.get(id=uid)
+            if user and etg.check_token(user, token):
+                user.profile.is_email_active = True
+                user.profile.save()
+                user.save()
+                messages.error(request, 'ایمیل با موفقیت تایید شد', 'error')
+                return redirect('account:dashboard')
+        except User.DoesNotExist:
+            messages.error(request, 'همچین کاربری یافت نشد', 'error')
+            return redirect('account:dashboard')
+
+
+@login_required(login_url='account:login')
+def resend_email_activation(request):
+    user = request.user
+    domain = get_current_site(request).domain
+    uidb64 = urlsafe_base64_encode(force_bytes(user.id))
+    url = reverse('account:email-activation', kwargs={'uidb64': uidb64, 'token': etg.make_token(user)})
+    link = 'http://' + domain + url
+    etext = '''
+                    سلام {} عزیز، به سایت فروشگاه برنامه نویسان خوش اومدی، برای فعال شدن حسابت
+                    روی لینک زیر کلیک کن(مدت اعتبار لینک 3 روز میباشد):\n
+                    {}
+                '''.format(f'{user.first_name} {user.last_name}', link)
+    email = EmailMessage(
+        'activation email', etext, 'test<soroush8fathi@gmail.com>', [request.user.email],
+    )
+    email.send(fail_silently=False)
+    messages.success(request, 'ایمیل تایید حساب مجددا فرستاده شد.', 'success')
+    return redirect('account:dashboard')
 
 
 def logins(request):
@@ -48,10 +113,11 @@ def logins(request):
                 return redirect('home:mainpage')
             else:
                 messages.error(request, 'نام کابری یا رمز رو اشتباه وارد کردی', 'danger')
+                return redirect('account:login')
+        return render(request, 'account/login.html', {'form': form})
     else:
         form = LoginForm()
-        context = {'form': form}
-        return render(request, 'account/login.html', context)
+        return render(request, 'account/login.html', {'form': form})
 
 
 def logouts(request):
@@ -73,6 +139,9 @@ def user_update(requset):
         user_form = UserUpdateForm(requset.POST, instance=requset.user)
         profile_form = ProfileUpdateForm(requset.POST, instance=requset.user.profile)
         if user_form.is_valid() and profile_form.is_valid():
+            # todo: check update email
+            # if requset.user.email != profile_form.cleaned_data['email']:
+            #     requset.user.profile.is_email_active = False
             user_form.save()
             profile_form.save()
             messages.success(requset, 'تغییرات با موفقیت انجام شد', 'success')
@@ -106,3 +175,7 @@ def change_passsword(request):
             'form': form,
         }
         return render(request, 'account/change-password.html', context=context)
+
+
+class ResetPassword(View):
+    pass
