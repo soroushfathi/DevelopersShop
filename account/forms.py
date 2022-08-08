@@ -13,8 +13,8 @@ errors = {
 class RegisterForm(forms.Form):
     username = forms.CharField(max_length=25, min_length=5, error_messages=errors)
     email = forms.EmailField(widget=forms.EmailInput(attrs={'placeholder': ''}))
-    first_name = forms.CharField(min_length=3, max_length=30)
-    last_name = forms.CharField(min_length=3, max_length=30)
+    first_name = forms.CharField(min_length=3, max_length=100, error_messages=errors)
+    # last_name = forms.CharField(min_length=3, max_length=30, error_messages=errors)
     password1 = forms.CharField(max_length=50, widget=forms.PasswordInput(attrs={'placeholder': 'رمز'}))
     password2 = forms.CharField(max_length=50, widget=forms.PasswordInput(attrs={'placeholder': 'تکرار رمز'}))
 
@@ -24,6 +24,11 @@ class RegisterForm(forms.Form):
             raise forms.ValidationError('این نام کاربری قبلا استفاده شده است')
 
         return un
+
+    def clean_first_name(self):
+        fn = self.cleaned_data['first_name']
+        if len(fn) < 6:
+            raise forms.ValidationError('نام و نام خانوادگی نا معتبر')
 
     def clean_email(self):
         e = self.cleaned_data['email']
