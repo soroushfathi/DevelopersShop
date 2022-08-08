@@ -8,6 +8,8 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = PhoneField(null=True, blank=True)
     address = models.TextField(max_length=400, null=True, blank=True)
+    is_email_active = models.BooleanField(default=False)
+    is_phone_active = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
