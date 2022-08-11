@@ -14,13 +14,16 @@
                     {% endfor %}
                 {% endfor %}
             {% endif %}
-            <label for="username"> نام کاربری
-                <input type="text" name="user" id="username" class="form-control" placeholder=""/>
-            </label>
-            <label for="password"> رمز
-                <input type="password" name="password" id="password" class="form-control" placeholder=""/>
-            </label>
-            <button type="submit" class="btn btn-success">تایید</button>
+            <div class="row">
+                <label for="username"> نام کاربری
+                    <input type="text" name="user" id="username" class="form-control" placeholder=""/>
+                </label>
+                <label for="password"> رمز
+                    <input type="password" name="password" id="password" class="form-control" placeholder=""/>
+                </label>
+            </div>
+            <button type="submit" class="btn btn-success col-1">تایید</button>
         </form>
+        <a href="{% url 'account:reset-password' %}" class="m-2">رمز عبور خود را فراموش کرده اید؟</a>
     </div>
 {% endblock %}
