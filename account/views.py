@@ -14,6 +14,8 @@ from django.utils.encoding import force_str, force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib.auth import views as auth_views
+from django.urls import reverse_lazy
 from six import text_type
 
 
@@ -177,5 +179,30 @@ def change_passsword(request):
         return render(request, 'account/change-password.html', context=context)
 
 
-class ResetPassword(View):
-    pass
+class ResetPassword(auth_views.PasswordResetView):
+    """
+        get email, create link and send it for reset password
+    """
+    template_name = 'account/reset-password.html'
+    success_url = reverse_lazy('account:done-reset-password')
+    email_template_name = 'account/link.html'
+
+
+# todo debug reset password
+class DoneResetPassword(auth_views.PasswordResetDoneView):
+    """
+        show sending proccess was seccussful
+    """
+    template_name = 'account/done-reset-password.html'
+
+
+class ConfirmResetPassword(auth_views.PasswordResetConfirmView):
+    """
+        submit new password, redirect it to complete level
+    """
+    template_name = 'account/confirm-reset-password.html'
+    success_url = reverse_lazy('account:complete-reset-password')
+
+
+class CompleteResetPassword(auth_views.PasswordResetCompleteView):
+    template_name = 'account/complete-reset-password.html'
