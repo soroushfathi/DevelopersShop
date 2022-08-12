@@ -25,10 +25,13 @@ class Order(models.Model):
     address = models.CharField(max_length=1000)
     postal_code = models.CharField(max_length=10, validators=[validate_postalcode], blank=True, null=True)
     totalprice = models.PositiveIntegerField(blank=True, null=True)
-    discount = models.PositiveIntegerField(blank=True, null=True)
+    discount = models.PositiveIntegerField(blank=True, null=True, default=0)
 
     def price(self):
-        return sum(x.item_price() for x in self.items.all())
+        if self.discount is not None:
+            return sum(x.item_price() for x in self.items.all()) * (100 - self.discount)//100
+        else:
+            return sum(x.item_price() for x in self.items.all())
 
     def __str__(self):
         return self.user.username
