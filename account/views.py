@@ -139,11 +139,11 @@ def dashboard(request):
 def user_update(requset):
     if requset.method == 'POST':
         user_form = UserUpdateForm(requset.POST, instance=requset.user)
-        profile_form = ProfileUpdateForm(requset.POST, instance=requset.user.profile)
+        profile_form = ProfileUpdateForm(requset.POST, requset.FILES, instance=requset.user.profile)
         if user_form.is_valid() and profile_form.is_valid():
             # todo: check update email
-            # if requset.user.email != profile_form.cleaned_data['email']:
-            #     requset.user.profile.is_email_active = False
+            if requset.user.email != profile_form.cleaned_data['email']:
+                requset.user.profile.is_email_active = False
             user_form.save()
             profile_form.save()
             messages.success(requset, 'تغییرات با موفقیت انجام شد', 'success')
@@ -206,3 +206,9 @@ class ConfirmResetPassword(auth_views.PasswordResetConfirmView):
 
 class CompleteResetPassword(auth_views.PasswordResetCompleteView):
     template_name = 'account/complete-reset-password.html'
+
+
+# todo complete favourite, and can be added to cart
+def favourite(request):
+    products = request.user.favourits.all()
+    return render(request, 'account/favourites.html', {'products': products})
