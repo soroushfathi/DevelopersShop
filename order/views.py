@@ -1,13 +1,17 @@
 from django.shortcuts import render, redirect
 from .forms import OrderForm
 from django.contrib import messages
-from .models import Order, ItemOrder
+from .models import Order, ItemOrder, Coupon
 from cart.models import Cart
+from .forms import CouponForm
+from django.views.decorators.http import require_POST
+from django.utils import timezone
 
 
 def order_detail(request):
     orders = Order.objects.filter(user_id=request.user.id)
-    return render(request, 'order/detail.html', context={'orders': orders})
+    couponform = CouponForm()
+    return render(request, 'order/detail.html', context={'orders': orders, 'couponform': couponform})
 
 
 def create_order(request):
@@ -39,3 +43,20 @@ def create_order(request):
             return render(request, 'order/create.html', context={'orderform': orderform})
 
     return render(request, 'order/create.html', context={'orderform': orderform})
+
+
+@require_POST
+def coupon(request, oid):
+    form = CouponForm(request.POST)
+    nowtime = timezone.now()
+    if form.is_valid():
+        code = form.cleaned_data['code']
+        try:
+            coupon = Coupon.objects.get(code__exact=code, start__lte=nowtime, end__gte=nowtime, active=True)
+        except Coupon.DoesNotExist:
+            messages.error(request, 'کد تخفیف نا معتبر', 'error')
+            return redirect('order:detail')
+        order = Order.objects.get(id=oid)
+        order.discount = coupon.discount
+        order.save()
+    return redirect('order:detail')
