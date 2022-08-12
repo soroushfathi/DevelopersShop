@@ -10,6 +10,7 @@ class Profile(models.Model):
     address = models.TextField(max_length=400, null=True, blank=True)
     is_email_active = models.BooleanField(default=False)
     is_phone_active = models.BooleanField(default=False)
+    prfile_image = models.ImageField(upload_to='profile/', default='profile/profile.jpg', null=True, blank=True)
 
     def __str__(self):
         return self.user.username
