@@ -55,6 +55,9 @@ def product_detail(request, slug):
     is_liked = False
     if product.like.filter(id=request.user.id).exists():
         is_liked = True
+    is_favourite = False
+    if product.favourite_users.filter(id=request.user.id).exists():
+        is_favourite = True
     if product.status is not None:
         variants = Variant.objects.filter(product__slug=slug)
         if request.method == 'POST':
@@ -63,13 +66,13 @@ def product_detail(request, slug):
         elif request.method == 'GET':
             variant = Variant.objects.get(id=variants[0].id)
         context = {
-            'product': product, 'variant': variant, 'variants': variants, 'similar': similar,
-            'is_liked': is_liked, 'comment_form': comment_form, 'comments': comments, 'cart_form': cart_form,
+            'product': product, 'variant': variant, 'variants': variants, 'similar': similar, 'cart_form': cart_form,
+            'is_liked': is_liked, 'is_favourite': is_favourite, 'comment_form': comment_form, 'comments': comments,
         }
         return render(request, 'home/detail.html', context=context)
     else:
         return render(request, 'home/detail.html', {
-            'product': product, 'similar': similar, 'comment_form': comment_form,
+            'product': product, 'similar': similar, 'comment_form': comment_form, 'is_favourite': is_favourite,
             'comments': comments, 'cart_form': cart_form, 'is_liked': is_liked,
         })
 
@@ -143,3 +146,18 @@ def product_search(request):
     else:
         messages.error(request, 'دست نکن یچه :)', 'danger')
         return render(request, 'home/products.html', {'products': products})
+
+
+def add_favourite(request, pid):
+    url = request.META.get('HTTP_REFERER')
+    product = Product.objects.get(id=pid)
+    if product.favourite_users.filter(id=request.user.id).exists():
+        product.favourite_users.remove(request.user)
+        product.save()
+    else:
+        product.favourite_users.add(request.user)
+    return redirect(url)
+
+
+def contact(request):
+    pass
