@@ -5,6 +5,7 @@ from django.urls import reverse
 from ckeditor.fields import RichTextField
 from taggit.managers import TaggableManager
 from django.contrib.auth.models import User
+from django_jalali.db import models as jmodels
 # from ckeditor_uploader.fields import RichTextUploadingField # for adding images
 
 
@@ -13,8 +14,8 @@ class Category(models.Model):
     is_subcategory = models.BooleanField(default=False)
     name = models.CharField(max_length=50)
     slug = models.SlugField(allow_unicode=True, unique=True, null=True, blank=True)
-    created = models.DateTimeField(auto_now_add=True)
-    update = models.DateTimeField(auto_now=True)
+    created = jmodels.jDateTimeField(auto_now_add=True)
+    update = jmodels.jDateTimeField(auto_now=True)
     image = models.ImageField(upload_to='category', null=True, blank=True)
 
     def __str__(self):
@@ -22,6 +23,10 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse('home:category', args=[self.slug])
+
+    class Meta:
+        verbose_name = 'دسته بندی'
+        verbose_name_plural = 'دسته بندی ها'
 
 
 class Product(models.Model):
@@ -39,8 +44,8 @@ class Product(models.Model):
     discount = models.PositiveIntegerField(blank=True, null=True)
     total_price = models.PositiveIntegerField()
     information = RichTextField(blank=True, null=True)
-    create = models.DateTimeField(auto_now_add=True)
-    update = models.DateTimeField(auto_now=True)
+    create = jmodels.jDateTimeField(auto_now_add=True)
+    update = jmodels.jDateTimeField(auto_now=True)
     status = models.CharField(max_length=30, null=True, blank=True, choices=VARIANT)
     image = models.ImageField(upload_to='products')
     tags = TaggableManager(blank=True)
@@ -48,12 +53,17 @@ class Product(models.Model):
     like_count = models.IntegerField(default=0)
     unlike = models.ManyToManyField(User, blank=True, related_name='user_unlike')
     unlike_count = models.IntegerField(default=0)
+    favourite_users = models.ManyToManyField(User, blank=True, related_name='favourits')
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse('home:detail', args=[self.slug])
+
+    class Meta:
+        verbose_name = 'محصول'
+        verbose_name_plural = 'محصولات'
 
     @property
     def total_price(self):
@@ -94,6 +104,10 @@ class Color(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'رنگ بندی'
+        verbose_name_plural = 'رنگ بندی ها'
+
 
 class Size(models.Model):
     name = models.CharField(max_length=50)
@@ -101,6 +115,10 @@ class Size(models.Model):
 
     def __str__(self):
         return f'{self.name}, {self.color}'
+
+    class Meta:
+        verbose_name = 'سایز بندی'
+        verbose_name_plural = 'سایز بندی ها'
 
 
 class Variant(models.Model):
@@ -123,6 +141,10 @@ class Variant(models.Model):
         else:
             return self.unit_price * (100 - self.discount) // 100
 
+    class Meta:
+        verbose_name = 'گونه'
+        verbose_name_plural = 'گونه ها'
+
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
@@ -130,7 +152,7 @@ class Comment(models.Model):
     comment = models.TextField()
     # todo: like & dislike a comment
     rate = models.PositiveIntegerField(default=0)
-    create = models.DateTimeField(auto_now_add=True)
+    create = jmodels.jDateTimeField(auto_now_add=True)
     reply = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='comment_replied')
     is_reply = models.BooleanField(default=False)
     like = models.ManyToManyField(User, blank=True, related_name='comment_liked')
@@ -142,6 +164,10 @@ class Comment(models.Model):
 
     def __str__(self):
         return '{}, {}'.format(self.user.username, self.product.name)
+
+    class Meta:
+        verbose_name = 'نظر'
+        verbose_name_plural = 'نظرات'
 
 
 class CommentForm(ModelForm):
@@ -160,3 +186,7 @@ class Images(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, blank=True)
     image = models.ImageField(upload_to='image/', blank=True)
+
+    class Meta:
+        verbose_name = 'تصویر'
+        verbose_name_plural = 'تصاویر'
