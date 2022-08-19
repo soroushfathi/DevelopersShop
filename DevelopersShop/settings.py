@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'taggit',
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [
@@ -111,7 +112,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fa-ir'
 
 TIME_ZONE = 'Asia/Tehran'
 
@@ -143,7 +145,7 @@ TAGGIT_CASE_INSENSATIVE = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email Config
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackEnd'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'soroush8fathi@gmail.com'
 EMAIL_HOST_PASSWORD = 'ayxacvodctfoslzy'
