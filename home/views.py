@@ -6,6 +6,7 @@ from .forms import SearchForm
 from django.contrib import messages
 from django.db.models import Q
 from django.core.mail import EmailMessage
+from django.core.paginator import Paginator
 
 
 def mainpage(request):
@@ -33,12 +34,15 @@ def all_products(request, slug=None):
     #         messages.error(request, 'مقدار سرچ نباید خالی باشد', 'danger')
     #     return render(request, 'home/products.html', {'products': products, 'form': form})
     products = Product.objects.all()
+    paginator = Paginator()
+    pageindex = request.GET.get('page')
+    pageobjects = paginator.get_page(pageindex)
     if slug:
         # data = Category.objects.get(slug=slug)
         data = get_object_or_404(Category, slug=slug)
         products = products.filter(category=data)
     context = {
-        'products': products,
+        'products': pageobjects,
         'category': category,
         'form': form,
     }
