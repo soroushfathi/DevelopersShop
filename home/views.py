@@ -5,6 +5,7 @@ from cart.models import Cart, CartForm
 from .forms import SearchForm
 from django.contrib import messages
 from django.db.models import Q
+from django.core.mail import EmailMessage
 
 
 def mainpage(request):
@@ -160,4 +161,11 @@ def add_favourite(request, pid):
 
 
 def contact(request):
-    pass
+    if request.method == 'POST':
+        subject, email = request.POST['subject'], request.POST['email']
+        msg = request.POST['message']
+        emailform = EmailMessage(
+            'contact form', f'{subject}\n{email}\n\t{msg}', 'dev-shop.ir<reply>', ('soroush8fathi@gmail.com', )
+        )
+        emailform.send(fail_silently=False)
+    return render(request, 'home/contact.html')
