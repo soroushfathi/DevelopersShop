@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load thumbnail %}
 {% block title %}همه محصولات{% endblock %}
 {% block body %}
     <div class="container">
@@ -6,7 +7,7 @@
             <div class="form-group col-3">
                 {% csrf_token %}
                 <input name="search" class="form-control" type="text" placeholder="search here…"/>
-{#                {{ form.as_p }}#}
+                {#                {{ form.as_p }}#}
                 <button type="submit" class="btn btn-outline-primary">Search</button>
             </div>
         </form>
@@ -23,13 +24,16 @@
         </div>
         <div class="row pt-2">
             {% for product in products %}
-                <div class="col-2 bg-warning mb-4 mt-2" style="box-shadow: #761c19 2px 5px 5px; border-radius: 5px;">
-                    <a href="{{ product.get_absolute_url }}">
+                <div class="col-2 bg-warning mb-4 mt-2" style="box-shadow: #360c0b 0 0 8px; border-radius: 5px;">
+                    <a href="{{ product.get_absolute_url }}" style="text-decoration: none;" class="link-primary pb-2">
                         <h3>{{ product.name }}</h3>
-                        <img src="{{ product.image.url }}" style="width: 120px; height: 120px; box-shadow: #1d1d1d 0 0 12px; margin: 3px;" alt=""/>
+                        {#                        {% thumbnail product.image '200x200' as img %}#}
+                        <img src="{{ product.image.url }}" style="box-shadow: #1d1d1d 0 0 12px; margin: 3px;" alt=""/>
+                        {#                        {% endthumbnail %}#}
                     </a>
                     {% if product.discount %}
-                        <h4> <span style="text-decoration: line-through; color: red;">{{ product.unit_price }}</span></h4>
+                        <h4><span style="text-decoration: line-through; color: red;">{{ product.unit_price }}</span>
+                        </h4>
                         <h3 style="color: #2b542c">قیمت نهایی: {{ product.total_price }}</h3>
                     {% else %}
                         <h3 style="color: #2b542c">قیمت: {{ product.total_price }}</h3>
@@ -38,5 +42,41 @@
                 <div class="col-1"></div>
             {% endfor %}
         </div>
+        <nav aria-label="...">
+            <ul class="pagination">
+                <li class="page-item {% if not products.has_previous %}disabled{% endif %}">
+                    <a class="page-link" href="{% if products.has_previous %}?page=
+                        {{ products.previous_page_number }}{% else %}#{% endif %}">قبلی</a>
+                </li>
+                {#                {% if products.has_previous %}#}
+                {#                    <li class="page-item">#}
+                {#                        <a class="page-link"#}
+                {#                           href="?page={{ products.previous_page_number }}">{{ products.previous_page_number }}</a>#}
+                {#                    </li>#}
+                {#                {% endif %}#}
+                {#                {% with ''|center:n as range %}#}
+                {% if not pagecount > 5 %}
+                    {% for p in pagecount %}
+                        <li class="page-item {% if p == products.number %}active{% endif %}"
+                            aria-current="page">
+                            <a class="page-link" href="?page={{ p }}">
+                                {{ p }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+                {#                {% endwith %}#}
+                {#                {% if products.has_next %}#}
+                {#                    <li class="page-item">#}
+                {#                        <a class="page-link"#}
+                {#                           href="?page={{ products.next_page_number }}">{{ products.next_page_number }}</a>#}
+                {#                    </li>#}
+                {#                {% endif %}#}
+                <li class="page-item {% if not products.has_next %}disabled{% endif %}">
+                    <a class="page-link" href="{% if products.has_next %}?page=
+                        {{ products.next_page_number }}{% else %}#{% endif %}">بعدی</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 {% endblock %}
