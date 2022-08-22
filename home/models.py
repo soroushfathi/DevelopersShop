@@ -47,6 +47,9 @@ class Product(models.Model):
     create = jmodels.jDateTimeField(auto_now_add=True)
     update = jmodels.jDateTimeField(auto_now=True)
     status = models.CharField(max_length=30, null=True, blank=True, choices=VARIANT)
+    brand = models.ForeignKey('Brand', on_delete=models.CASCADE, blank=True, null=True)
+    size = models.ManyToManyField('Size', blank=True)
+    color = models.ManyToManyField('Color', blank=True)
     image = models.ImageField(upload_to='products')
     tags = TaggableManager(blank=True)
     like = models.ManyToManyField(User, blank=True, related_name='user_like')
@@ -107,6 +110,13 @@ class Color(models.Model):
     class Meta:
         verbose_name = 'رنگ بندی'
         verbose_name_plural = 'رنگ بندی ها'
+
+
+class Brand(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 
 class Size(models.Model):
