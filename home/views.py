@@ -4,9 +4,16 @@ from .models import Category, Product, Variant, CommentForm, Comment, ReplyForm,
 from cart.models import Cart, CartForm
 from .forms import SearchForm
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Max, Min
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
+from django.template.defaulttags import register
+from .filters import ProductFilter
+
+
+@register.filter
+def get_range(value):
+    return range(value)
 
 
 def mainpage(request):
@@ -32,19 +39,27 @@ def all_products(request, slug=None):
     #             messages.error(request, 'محصولی با اسم \"{}\" یافت نشد'.format(data), 'danger')
     #     else:
     #         messages.error(request, 'مقدار سرچ نباید خالی باشد', 'danger')
-    #     return render(request, 'home/products.html', {'products': products, 'form': form})
+    #     return render(request, 'home/products.html', {'products': products, 'form': form}
     products = Product.objects.all()
-    paginator = Paginator()
+    maxprice = int(products.aggregate(unit_price=Max('unit_price'))['unit_price'])
+    minprice = int(products.aggregate(unit_price=Min('unit_price'))['unit_price'])
+    filtr = ProductFilter(request.GET, queryset=products)
+    products = filtr.qs
+    perpage = 8
+    paginator = Paginator(products, per_page=perpage)
     pageindex = request.GET.get('page')
     pageobjects = paginator.get_page(pageindex)
+
     if slug:
-        # data = Category.objects.get(slug=slug)
-        data = get_object_or_404(Category, slug=slug)
-        products = products.filter(category=data)
+        data = get_object_or_404(Category, slug=slug)  # get_object_or_404(Category, slug=slug)
+        pageobjects = products.filter(category=data)
+        paginator = Paginator(pageobjects, per_page=perpage)
+        pageindex = request.GET.get('page')
+        pageobjects = paginator.get_page(pageindex)
+    pagecount = paginator.num_pages
     context = {
-        'products': pageobjects,
-        'category': category,
-        'form': form,
+        'products': pageobjects, 'category': category, 'form': form, 'maxprice': maxprice, 'minprice': minprice,
+        'pageindex': pageindex, 'pagecount': range(1, pagecount+1), 'filter': filtr,
     }
     return render(request, 'home/products.html', context=context)
 
