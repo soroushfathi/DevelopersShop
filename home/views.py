@@ -9,6 +9,7 @@ from django.core.mail import EmailMessage
 from django.core.paginator import Paginator
 from django.template.defaulttags import register
 from .filters import ProductFilter
+from urllib.parse import urlencode
 
 
 @register.filter
@@ -57,9 +58,12 @@ def all_products(request, slug=None):
         pageindex = request.GET.get('page')
         pageobjects = paginator.get_page(pageindex)
     pagecount = paginator.num_pages
+    dataget = request.GET.copy()
+    if 'page' in dataget:
+        del dataget['page']
     context = {
         'products': pageobjects, 'category': category, 'form': form, 'maxprice': maxprice, 'minprice': minprice,
-        'pageindex': pageindex, 'pagecount': range(1, pagecount+1), 'filter': filtr,
+        'pageindex': pageindex, 'pagecount': range(1, pagecount+1), 'filter': filtr, 'dataget': urlencode(dataget),
     }
     return render(request, 'home/products.html', context=context)
 
@@ -173,9 +177,12 @@ def add_favourite(request, pid):
     product = Product.objects.get(id=pid)
     if product.favourite_users.filter(id=request.user.id).exists():
         product.favourite_users.remove(request.user)
+        product.favcount -= 1
         product.save()
     else:
         product.favourite_users.add(request.user)
+        product.favcount += 1
+        product.save()
     return redirect(url)
 
 
