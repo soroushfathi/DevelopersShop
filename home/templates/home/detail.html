@@ -1,7 +1,59 @@
 {% extends 'base.html' %}
+{% load jformat %}
 {% load static %}
 {% block css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/comments-and-rating.css' %}">
+{% endblock %}
+{% block scripts %}
+    {% if product.status != None %}
+        <script>
+            const labels = [{% for vpt in variant_price_tracker %}{% if vpt.variant_id == variant.id %}'{{ vpt.update|jformat:"%B %Y" }}', {% endif %}{% endfor %}];
+            if (labels.length) {
+                const data = {
+                    labels: labels,
+                    datasets: [{
+                        label: 'نمودار تغییر قیمت 1',
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: [{% for vpt in variant_price_tracker %}{% if vpt.variant_id == variant.id %}'{{ vpt.unit_price }}', {% endif %}{% endfor %}],
+                    }]
+                };
+                const config = {
+                    type: 'line',
+                    data: data,
+                    options: {}
+                };
+                const myChart = new Chart(
+                    document.getElementById('myChart'),
+                    config
+                );
+            }
+        </script>
+    {% else %}
+        <script>
+            const labels = [{% for pt in price_tracker %}'{{ pt.update|jformat:"%B %Y" }}', {% endfor %}];
+            if (labels.length) {
+                const data = {
+                    labels: labels,
+                    datasets: [{
+                        label: 'نمودار تغییر قیمت 2',
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: [{% for pt in price_tracker %}'{{ pt.unit_price }}', {% endfor %}],
+                    }]
+                };
+                const config = {
+                    type: 'line',
+                    data: data,
+                    options: {}
+                };
+                const myChart = new Chart(
+                    document.getElementById('myChart'),
+                    config
+                );
+            }
+        </script>
+    {% endif %}
 {% endblock %}
 {% block body %}
     <div class="container">
@@ -9,15 +61,21 @@
         <img src="{{ product.image.url }}" style="width: 140px; height: 140px;  box-shadow: #2f56ff 0 0 8px;" alt=""/>
         <p>{{ product.information | safe }}</p>
         {% if is_liked %}
-            <a href="{% url 'home:like' product.id %}">
-                <img src="{% static 'img/index50.png' %}" alt="">
-            </a>
+            <a href="{% url 'home:like' product.id %}"><i class="fa fa-heart" style="color: red; font-size: 25px;"></i></a>
         {% else %}
-            <a href="{% url 'home:like' product.id %}">
-                <img src="{% static 'img/index2-50png.png' %}" alt="">
-            </a>
+            <a href="{% url 'home:like' product.id %}"><i class="fa fa-heart-o"
+                                                          style="color: red; font-size: 25px;"></i></a>
         {% endif %}
         <span class="btn btn-info">like:{{ product.like_count }}</span>
+        {% if is_favourite %}
+            <a href="{% url 'home:favourite' product.id %}">
+                <i class="fa fa-bookmark" style="color: #000062; font-size: 25px;"></i>
+            </a>
+        {% else %}
+            <a href="{% url 'home:favourite' product.id %}">
+                <i class="fa fa-bookmark-o" style="color: black; font-size: 25px;"></i>
+            </a>
+        {% endif %}
         <hr/>
         {% if product.status == 'Size' %}
             <form action="" method="POST">
@@ -44,9 +102,15 @@
         <div class="cart bg-info col-3 text-center mb-2 text-white" style="border-radius: 4px;">
             <h5 class="pt-3" style="font-size: 16px;">قیمت مدل انتخابی شما:
                 {% if product.status != 'None' %}
-                    {{ variant.total_price }}
+                    {% if variant.discount > 0 %}
+                        <s style="font-size: 14px; color: red;">{{ variant.unit_price }}</s>
+                    {% endif %}
+                    <div style="color: #2cb96e; text-shadow: #843534 0 0 4px;">{{ variant.total_price }}</div>
                 {% else %}
-                    {{ product.total_price }}
+                    {% if variant.discount > 0 %}
+                        <s style="font-size: 14px; color: red;">{{ product.unit_price }}</s>
+                    {% endif %}
+                    <div style="color: #78d9a5; text-shadow: #843534 0 0 4px;">{{ product.total_price }}</div>
                 {% endif %}
             </h5>
             <hr>
@@ -68,28 +132,33 @@
                 {% endif %}
             </h6>
         </div>
+
         <div class="cart">
             {% if variant.amount > 0 %}
                 {% if product.status != 'None' %}
                     <form method="post" action="{% url 'cart:add_cart' product.id %}" class="form-control col-2">
                         {% csrf_token %}
-                        <input type="hidden" name="select" value="{{ variant.id }}">
+                        <input type="hidden" name="varid" value="{{ variant.id }}">
                         <input type="number" name="quantity" min="1" value="1" max="{{ variant.amount }}" required
-                               oninvalid="setCustomValidity('تعداد بیش از حد موجودی است')" class="forn-control"
-                               style="height: 25px;">
+                               oninvalid="setCustomValidity('تعداد بیش از حد موجودی است')" style="height: 25px;">
                         <button class="btn btn-success" type="submit">افزودن به سبد خرید</button>
                     </form>
                 {% else %}
                     <form method="post" action="{% url 'cart:add_cart' product.id %}">
                         {% csrf_token %}
                         <input type="number" name="quantity" min="1" value="1" max="{{ product.amount }}" required
-                               oninvalid="setCustomValidity('تعداد بیش از حد موجودی است')" class="form-control"
-                               style="height: 25px;">
+                               oninvalid="setCustomValidity('تعداد بیش از حد موجودی است')" style="height: 25px;">
                         <button class="btn btn-success" type="submit">افزودن به سبد خرید</button>
                     </form>
                 {% endif %}
             {% endif %}
         </div>
+
+
+        <div>
+            <canvas id="myChart" width="150" height="50"></canvas>
+        </div>
+
         <h3>محصولات مشابه</h3><br>
         <div class="row ml-2">
             {% for tag in similar %}
@@ -100,6 +169,7 @@
             {% endfor %}
         </div>
         <hr>
+
         <div class="row comment">
             <div class="col-6">
                 <form method="post" action="{% url 'home:comment' product.id %}">
