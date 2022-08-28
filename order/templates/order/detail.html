@@ -1,4 +1,84 @@
 {% include 'base.html' %}
+{% block css %}
+    <style>
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: #3498DB;
+            color: white;
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Dropdown button on hover & focus */
+        .dropbtn:hover, .dropbtn:focus {
+            background-color: #134d73;
+            box-shadow: darkorange 0 0 3px;
+        }
+
+        /* The container <div> - needed to position the dropdown content */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #ddd
+        }
+
+        /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+        .show {
+            display: block;
+        }
+    </style>
+{% endblock %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        /* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        // Close the dropdown menu if the user clicks outside of it
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn')) {
+                const dropdowns = document.getElementsByClassName("dropdown-content");
+                let i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}
 {% block body %}
     <div class="container">
         <h1>سبد خرید</h1>
@@ -11,6 +91,7 @@
                 <th scope="col">کدپستی</th>
                 <th scope="col">آدرس</th>
                 <th scope="col">محصولات</th>
+                <th scope="col">کد تخفیف</th>
                 <th scope="col">قیمت نهایی</th>
                 <th scope="col">وضعیت</th>
             </tr>
@@ -23,23 +104,42 @@
                     <td>{{ order.postal_code }}</td>
                     <td>{{ order.address }}</td>
                     <td>
-                        {% for item in order.items.all %}
-                            {{ forloop.counter }}.
-                            {% if item.product.status != 'None' %}
-                                {{ item.variant.name }}&nbsp;&nbsp;
-                            {% else %}
-                                {{ item.product.name }}&nbsp;&nbsp;
-                            {% endif %}
-                        {% endfor %}
+                        <div class="dropdown">
+                            <button onclick="myFunction()" class="dropbtn">نمایش لیست</button>
+                            <div id="myDropdown" class="dropdown-content">
+                                {% for item in order.items.all %}
+                                    {% if item.product.status != 'None' %}
+                                        <a class="dropdown-item" href="{% url 'home:detail' item.product.slug %}">
+                                            {{ forloop.counter }}. {{ item.variant.name }}
+                                        </a>
+                                    {% else %}
+                                        <a class="dropdown-item" href="{% url 'home:detail' item.product.slug %}">
+                                            {{ forloop.counter }}. {{ item.product.name }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
                     </td>
                     <td>
-                        {{ order.totalprice }}
+                        <form action="" method="post" class="form-control">
+                            {% csrf_token %}
+                            <label for="coupon" style="font-size: 12px;">اگه کد تخفیف داری بزن
+                                <input name="code" id="coupon" style="width: 110px;">
+                            </label>
+                            <button type="submit" class="btn btn-success">اعمال</button>
+                        </form>
+                    </td>
+                    <td>
+                        {{ order.price }}
                     </td>
                     <td>
                         {% if order.paid %}
+                            <i class="fa fa-check" style="color: green;"></i>
                             پرداخت شده
                         {% else %}
-                            منتظر پرداخت...
+                            <i class="fa fa-times" style="color: red;"></i>
+                            منتظر پرداخت
                         {% endif %}
                     </td>
                 </tr>
