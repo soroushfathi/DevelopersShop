@@ -6,6 +6,7 @@ from ckeditor.fields import RichTextField
 from taggit.managers import TaggableManager
 from django.contrib.auth.models import User
 from django_jalali.db import models as jmodels
+from django.db.models.signals import post_save
 # from ckeditor_uploader.fields import RichTextUploadingField # for adding images
 
 
@@ -142,6 +143,7 @@ class Variant(models.Model):
     unit_price = models.PositiveIntegerField()
     discount = models.PositiveIntegerField(blank=True, null=True)
     total_price = models.PositiveIntegerField()
+    update = jmodels.jDateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -202,3 +204,24 @@ class Images(models.Model):
     class Meta:
         verbose_name = 'تصویر'
         verbose_name_plural = 'تصاویر'
+
+
+class Chart(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+    unit_price = models.IntegerField(default=0)
+    update = jmodels.jDateTimeField(auto_now=True)
+    color = models.CharField(max_length=50, blank=True, null=True)
+    size = models.CharField(max_length=50, blank=True, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='update_product', blank=True, null=True)
+    variant = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='update_product', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+def product_update(sender, instance, created, *arsg, **kwargs):
+    Chart.objects.create(name=instance.name, product=instance,
+                         unit_price=instance['unit_price'], update=instance['update'])
+
+
+post_save.connect(receiver=product_update, sender=Product)
