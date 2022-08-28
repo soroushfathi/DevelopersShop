@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Category, Product, Variant, CommentForm, Comment, ReplyForm, Images
+from .models import Category, Product, Variant, CommentForm, Comment, ReplyForm, Images, PriceTracker
 from cart.models import Cart, CartForm
 from .forms import SearchForm
 from django.contrib import messages
@@ -71,6 +71,8 @@ def all_products(request, slug=None):
 def product_detail(request, slug):
     # product = Product.objects.get(slug=slug)
     product = get_object_or_404(Product, slug=slug)
+    p_pricetracker = PriceTracker.objects.filter(product__slug=slug)
+    var_pricetracker = PriceTracker.objects.all()
     images = Images.objects.filter(product__slug=slug)
     comment_form = CommentForm()
     comments = Comment.objects.filter(product__slug=slug, is_reply=False)
@@ -92,12 +94,13 @@ def product_detail(request, slug):
         context = {
             'product': product, 'variant': variant, 'variants': variants, 'similar': similar, 'cart_form': cart_form,
             'is_liked': is_liked, 'is_favourite': is_favourite, 'comment_form': comment_form, 'comments': comments,
+            'variant_price_tracker': var_pricetracker,
         }
         return render(request, 'home/detail.html', context=context)
     else:
         return render(request, 'home/detail.html', {
             'product': product, 'similar': similar, 'comment_form': comment_form, 'is_favourite': is_favourite,
-            'comments': comments, 'cart_form': cart_form, 'is_liked': is_liked,
+            'comments': comments, 'cart_form': cart_form, 'is_liked': is_liked, 'price_tracker': p_pricetracker,
         })
 
 
