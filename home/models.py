@@ -6,7 +6,7 @@ from ckeditor.fields import RichTextField
 from taggit.managers import TaggableManager
 from django.contrib.auth.models import User
 from django_jalali.db import models as jmodels
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 # from ckeditor_uploader.fields import RichTextUploadingField # for adding images
 
 
@@ -32,7 +32,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     VARIANT = (
-        ('None', 'none'),
+        ('None', 'None'),
         ('Size', 'size'),
         ('Color', 'color'),
     )
@@ -42,6 +42,7 @@ class Product(models.Model):
     available = models.BooleanField(default=True)
     amount = models.PositiveIntegerField()
     unit_price = models.PositiveIntegerField()
+    pre_price = models.IntegerField(default=0)
     discount = models.PositiveIntegerField(blank=True, null=True)
     total_price = models.PositiveIntegerField()
     information = RichTextField(blank=True, null=True)
@@ -60,6 +61,7 @@ class Product(models.Model):
     favourite_users = models.ManyToManyField(User, blank=True, related_name='favourits')
     favcount = models.IntegerField(default=0)
     sellcount = models.IntegerField(default=0)
+    is_changed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -103,6 +105,13 @@ class Product(models.Model):
             star = round(data['avg'], 1)
         return star
 
+    def price(self):
+        return self.unit_price
+
+    def save(self, *args, **kwargs):
+        self.pre_price = self.unit_price
+        super(Product, self).save(*args, **kwargs)
+
 
 class Color(models.Model):
     name = models.CharField(max_length=50)
@@ -144,6 +153,7 @@ class Variant(models.Model):
     discount = models.PositiveIntegerField(blank=True, null=True)
     total_price = models.PositiveIntegerField()
     update = jmodels.jDateTimeField(auto_now=True)
+    is_changed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -206,22 +216,33 @@ class Images(models.Model):
         verbose_name_plural = 'تصاویر'
 
 
-class Chart(models.Model):
+class PriceTracker(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     unit_price = models.IntegerField(default=0)
     update = jmodels.jDateTimeField(auto_now=True)
     color = models.CharField(max_length=50, blank=True, null=True)
     size = models.CharField(max_length=50, blank=True, null=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='update_product', blank=True, null=True)
-    variant = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='update_product', blank=True, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='price_tracker', blank=True, null=True)
+    variant = models.ForeignKey(Variant, on_delete=models.CASCADE, related_name='price_tracker', blank=True, null=True)
 
     def __str__(self):
         return self.name
 
 
-def product_update(sender, instance, created, *arsg, **kwargs):
-    Chart.objects.create(name=instance.name, product=instance,
-                         unit_price=instance['unit_price'], update=instance['update'])
+def product_price_tracker(sender, instance, created, *arsg, **kwargs):
+    # if instance.pre_price != instance.unit_price:
+    if instance.is_changed:
+        PriceTracker.objects.create(name=instance.name, product=instance,
+                                    unit_price=instance.unit_price, update=instance.update)
 
 
-post_save.connect(receiver=product_update, sender=Product)
+post_save.connect(receiver=product_price_tracker, sender=Product)
+
+
+def variant_price_tracker(sender, instance, created, *arsg, **kwargs):
+    if instance.is_changed:
+        PriceTracker.objects.create(name=instance.name, variant=instance, size=instance.size, color=instance.color,
+                                    unit_price=instance.unit_price, update=instance.update)
+
+
+post_save.connect(receiver=variant_price_tracker, sender=Variant)
