@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'taggit',
     'sorl.thumbnail',
+    'django_filters',
+    'django_jalali',
 ]
 
 MIDDLEWARE = [
