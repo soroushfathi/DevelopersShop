@@ -6,6 +6,8 @@ from cart.models import Cart
 from .forms import CouponForm
 from django.views.decorators.http import require_POST
 from django.utils import timezone
+import jdatetime
+from django.utils.crypto import get_random_string
 
 
 def order_detail(request):
@@ -20,6 +22,7 @@ def create_order(request):
     if request.method == 'POST' or None:
         orderform = OrderForm(request.POST)
         if orderform.is_valid():
+            cod = get_random_string(length=7)
             data = orderform.cleaned_data
             totalprice = 0
             carts = Cart.objects.filter(user_id=request.user.id)
@@ -29,7 +32,7 @@ def create_order(request):
                 else:
                     totalprice += cart.product.total_price * cart.quantity
             order = Order.objects.create(
-                user_id=request.user.id, first_name=data['first_name'], last_name=data['last_name'],
+                user_id=request.user.id, first_name=data['first_name'], last_name=data['last_name'], codeorder=cod,
                 email=data['email'], address=data['address'], postal_code=data['postal_code'], totalprice=totalprice,
             )
             orderitems = []
@@ -48,7 +51,7 @@ def create_order(request):
 @require_POST
 def coupon(request, oid):
     form = CouponForm(request.POST)
-    nowtime = timezone.now()
+    nowtime = jdatetime.datetime.now()
     if form.is_valid():
         code = form.cleaned_data['code']
         try:
