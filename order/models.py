@@ -4,6 +4,7 @@ from home.models import Product, Variant
 from django.core.validators import MinLengthValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from django_jalali.db import models as jmodels
 
 
 def validate_postalcode(value):
@@ -17,8 +18,9 @@ def validate_postalcode(value):
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    create = models.DateTimeField(auto_now_add=True)
+    create = jmodels.jDateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
+    codeorder = models.CharField(max_length=200, null=True)
     email = models.EmailField(blank=True, null=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -35,6 +37,10 @@ class Order(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    class Meta:
+        verbose_name = 'سفارش'
+        verbose_name_plural = 'سفارشات'
 
 
 class ItemOrder(models.Model):
@@ -63,10 +69,18 @@ class ItemOrder(models.Model):
             totalprice += self.product.total_price * self.quantity
         return totalprice
 
+    class Meta:
+        verbose_name = 'محصول سفارش'
+        verbose_name_plural = 'محصولات سفارش'
+
 
 class Coupon(models.Model):
     code = models.CharField(max_length=20, unique=True)
-    start = models.DateTimeField()
-    end = models.DateTimeField()
+    start = jmodels.jDateTimeField()
+    end = jmodels.jDateTimeField()
     active = models.BooleanField()
     discount = models.PositiveIntegerField()
+
+    class Meta:
+        verbose_name = 'کد تخفیف'
+        verbose_name_plural = 'کدهای تخفیف'
