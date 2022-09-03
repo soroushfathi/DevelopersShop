@@ -8,6 +8,8 @@ from order.forms import OrderForm
 
 def cart_detail(request):
     carts = Cart.objects.filter(user_id=request.user.id)
+    user = request.user
+    prof = request.user.profile
     total = 0
     for cart in carts:
         if cart.product.status != 'None':
@@ -19,6 +21,7 @@ def cart_detail(request):
         'carts': carts,
         'total': total,
         'orderform': orderform,
+        'user': user, 'prof': prof,
     }
     return render(request, 'cart/cart.html', context=context)
 
@@ -63,12 +66,13 @@ def add_cart(request, pid):
                     elif getcart.quantity + quan <= 0:
                         messages.error(request, 'کمتر از یک عدد نامعتبر', 'danger')
                 else:
+                    getcart = Cart.objects.get(user_id=request.user.id, product_id=pid)
                     if getcart.product.amount >= getcart.quantity + quan > 0:
                         getcart.quantity += quan
                     elif getcart.quantity + quan > getcart.product.amount:
                         messages.error(request, 'درخواست بیش از حد موجودی است', 'danger')
                     elif getcart.product + quan <= 0:
-                        messages.error(request, 'کمتر از یک عدد نامعتبر', 'danger')
+                        messages.error(request, 'حداقل تعداد باید یکی باشد', 'danger')
                 getcart.save()
             else:
                 Cart.objects.create(product_id=pid, user_id=request.user.id, variant_id=var_id, quantity=quan)
@@ -83,3 +87,10 @@ def remove_cart(request, cid):
     url = request.META.get('HTTP_REFERER')
     Cart.objects.filter(id=cid).delete()
     return redirect(url)
+
+
+def compare(request, pid):
+    if request.user.is_anonymous:
+        pass
+    else:
+        pass
