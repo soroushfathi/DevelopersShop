@@ -137,6 +137,10 @@
                             {% else %}
                                 <h3 style="color: #2b542c">قیمت: {{ product.total_price }}</h3>
                             {% endif %}
+                            <form action="{% url 'cart:compare' product.id %}">
+                                <input type="hidden" value="{{ product.id }}" name="product">
+                                <button type="submit">افزودن مقایسه</button>
+                            </form>
                         </div>
                     {% endfor %}
                 </div>
