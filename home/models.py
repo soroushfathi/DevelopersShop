@@ -219,7 +219,12 @@ class Images(models.Model):
 
 
 class Views(models.Model):
-    pass
+    ip = models.CharField(max_length=200, blank=True, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
+    create = jmodels.jDateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.product.name
 
 
 class PriceTracker(models.Model):
