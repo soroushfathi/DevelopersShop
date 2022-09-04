@@ -90,12 +90,18 @@ def remove_cart(request, cid):
 
 
 def compare(request, pid):
+    item = get_object_or_404(Product.objects.get(id=pid))
     if request.user.is_anonymous:
-        item = get_object_or_404(Product.objects.get(id=pid))
         qs = Compare.objects.filter(user_id=request.user.id, product_id=pid)
         if qs.exists():
             messages.success(request, 'done babe')
         else:
             Compare.objects.create(user_id=request.user.id, product=pid, sessionkey=None)
     else:
-        pass
+        qs = Compare.objects.filter(user_id=None, product_id=pid, sessionkey=request.session.session_key)
+        if qs.exists():
+            messages.success(request, 'done by session babe')
+        else:
+            if not request.session.session_key:
+                request.session.create()
+            Compare.objects.create(user_id=request.user.id, product=pid, sessionkey=request.session.session_key)
