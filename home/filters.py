@@ -8,18 +8,19 @@ class ProductFilter(django_filters.FilterSet):
         ('گران ترین', 'گران ترین'),
         ('ارزان ترین', 'ارزان ترین'),
     }
-
     Choice2 = {
         ('جدید ترین', 'جدید ترین'),
     }
-
     Choice3 = {
         ('با تخفیف ترین', 'با تخفیف ترین'),
     }
-
     Choice4 = {
         ('محبوب ترین', 'محبوب ترین'),
     }
+    Choice5 = {
+        ('پربازدید ترین', 'پربازدید ترین'),
+    }
+
     price_from = django_filters.NumberFilter(field_name='unit_price', lookup_expr='gte')
     price_to = django_filters.NumberFilter(field_name='unit_price', lookup_expr='lte')
     size = django_filters.ModelMultipleChoiceFilter(queryset=models.Size.objects.all(), widget=forms.CheckboxSelectMultiple)
@@ -27,6 +28,7 @@ class ProductFilter(django_filters.FilterSet):
     priceorder = django_filters.ChoiceFilter(choices=Choice1, method='priceorder_filter')
     timeorder = django_filters.ChoiceFilter(choices=Choice2, method='timeorder_filter')
     discountorder = django_filters.ChoiceFilter(choices=Choice3, method='discountorder_filter')
+    views = django_filters.ChoiceFilter(choices=Choice5, method='viewsorder_filter')
     # todo sellcount: add sell count (order view, + sell field in product model)
     favourite = django_filters.ChoiceFilter(choices=Choice4, method='favourite_filter')
 
@@ -45,3 +47,7 @@ class ProductFilter(django_filters.FilterSet):
     def favourite_filter(self, queryset, name, value):
         ford = '-favcount' if value == 'محبوب ترین' else 'favcount'
         return queryset.order_by(ford)
+
+    def viewsorder_filter(self, queryset, name, value):
+        vord = '-viewcount' if value == 'پربازدید ترین' else 'viewcount'
+        return queryset.order_by(vord)
