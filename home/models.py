@@ -62,6 +62,8 @@ class Product(models.Model):
     favcount = models.IntegerField(default=0)
     sellcount = models.IntegerField(default=0)
     is_changed = models.BooleanField(default=False)
+    views = models.ManyToManyField(User, blank=True, null=True, related_name='poducts_view')
+    viewcount = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
@@ -214,6 +216,10 @@ class Images(models.Model):
     class Meta:
         verbose_name = 'تصویر'
         verbose_name_plural = 'تصاویر'
+
+
+class Views(models.Model):
+    pass
 
 
 class PriceTracker(models.Model):
