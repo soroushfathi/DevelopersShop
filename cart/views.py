@@ -90,18 +90,29 @@ def remove_cart(request, cid):
 
 
 def compare(request, pid):
-    item = get_object_or_404(Product.objects.get(id=pid))
-    if request.user.is_anonymous:
+    url = request.META.get('HTTP_REFERER')
+    item = get_object_or_404(Product.objects.filter(id=pid))
+    if request.user.is_authenticated:
         qs = Compare.objects.filter(user_id=request.user.id, product_id=pid)
         if qs.exists():
-            messages.success(request, 'done babe')
+            messages.success(request, 'قبلا به سبد مقایسه اضافه شده')
         else:
-            Compare.objects.create(user_id=request.user.id, product=pid, sessionkey=None)
+            Compare.objects.create(user_id=request.user.id, product_id=pid, sessionkey=None)
     else:
         qs = Compare.objects.filter(user_id=None, product_id=pid, sessionkey=request.session.session_key)
         if qs.exists():
-            messages.success(request, 'done by session babe')
+            messages.success(request, 'قبلا به سبد مقایسه اضافه شده2')
         else:
             if not request.session.session_key:
                 request.session.create()
             Compare.objects.create(user_id=request.user.id, product=pid, sessionkey=request.session.session_key)
+    return redirect(url)
+
+
+def show_compare(request):
+    if request.user.is_authenticated:
+        data = Compare.objects.filter(user_id=request.user.id)
+        return render(request, 'cart/show-comp.html', {'data': data})
+    else:
+        data = Compare.objects.filter(sessionkey__exact=request.session.session_key, user_id=None)
+        return render(request, 'cart/show-comp.html', {'data': data})
