@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from home.models import Product
-from .models import Cart, CartForm
+from .models import Cart, CartForm, Compare
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from order.forms import OrderForm
@@ -91,6 +91,11 @@ def remove_cart(request, cid):
 
 def compare(request, pid):
     if request.user.is_anonymous:
-        pass
+        item = get_object_or_404(Product.objects.get(id=pid))
+        qs = Compare.objects.filter(user_id=request.user.id, product_id=pid)
+        if qs.exists():
+            messages.success(request, 'done babe')
+        else:
+            Compare.objects.create(user_id=request.user.id, product=pid, sessionkey=None)
     else:
         pass
