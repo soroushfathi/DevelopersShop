@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'account.apps.AccountConfig',
     'cart.apps.CartConfig',
     'order.apps.OrderConfig',
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,7 +49,6 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'django_filters',
     'django_jalali',
-    'jazzmin',
 ]
 
 MIDDLEWARE = [
