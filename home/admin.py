@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Variant, Size, Color, Comment, Images, Brand, PriceTracker, Views
+from .models import Category, Product, Variant, Size, Color, Comment, Images, Brand, PriceTracker, View
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -24,6 +24,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('name', 'create', 'update', 'amount', 'available', 'total_price', 'unit_price', 'discount')
     list_filter = ('amount', 'unit_price', 'discount')
     list_editable = ('amount',)
+    change_list_template = 'home/admin-panel-statics.html'
     # raw_id_fields = ('',)
     inlines = [ProductVariantInline, ImageInlines]
 
@@ -53,4 +54,4 @@ admin.site.register(Variant)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Images)
 admin.site.register(PriceTracker)
-admin.site.register(ViewsAdmin)
+admin.site.register(View, ViewsAdmin)
