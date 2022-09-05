@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-f^r^rjhgk)91(kce5%-nz=!i*8q$1rnwi90&kyri0n&i%s_u*1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'django_filters',
     'django_jalali',
+    'jazzmin',
 ]
 
 MIDDLEWARE = [
