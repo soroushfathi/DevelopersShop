@@ -6,7 +6,7 @@ a website for developers, developed by django, options: <br>
 3. SMS authentication 
 4. Email Validation 
 5. like, comment, post  
-6. send **eamil** in contact us 
+6. send **email** in contact us 
 7. similar products 
 8. search products 
 9. shopping basket 
@@ -15,4 +15,5 @@ a website for developers, developed by django, options: <br>
 12. customized admin panel 
 13. view conter via **ip** 
 14. compare products (use **sessions** for anonym users) 
-15. **pagination** by create **template tag**
+15. **pagination** by create template tag and filter tag
+16. **sitemap**
