@@ -17,3 +17,4 @@ a website for developers, developed by django, options: <br>
 14. compare products (use **sessions** for anonym users) 
 15. **pagination** by create template tag and filter tag
 16. **sitemap**
+17. intermediate class
