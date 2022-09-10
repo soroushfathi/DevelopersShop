@@ -62,7 +62,7 @@ class Product(models.Model):
     favcount = models.IntegerField(default=0)
     sellcount = models.IntegerField(default=0)
     is_changed = models.BooleanField(default=False)
-    views = models.ManyToManyField(User, blank=True, null=True, related_name='poducts_view')
+    views = models.ManyToManyField(User, blank=True, related_name='poducts_view')
     viewcount = models.IntegerField(default=0)
 
     def __str__(self):
@@ -218,7 +218,7 @@ class Images(models.Model):
         verbose_name_plural = 'تصاویر'
 
 
-class Views(models.Model):
+class View(models.Model):
     ip = models.CharField(max_length=200, blank=True, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
     create = jmodels.jDateTimeField(auto_now_add=True)
