@@ -58,7 +58,7 @@ class Product(models.Model):
     like_count = models.IntegerField(default=0)
     unlike = models.ManyToManyField(User, blank=True, related_name='user_unlike')
     unlike_count = models.IntegerField(default=0)
-    favourite_users = models.ManyToManyField(User, blank=True, related_name='favourits')
+    favourite_users = models.ManyToManyField(User, blank=True, related_name='favourits', through='Favourite')
     favcount = models.IntegerField(default=0)
     sellcount = models.IntegerField(default=0)
     is_changed = models.BooleanField(default=False)
@@ -113,6 +113,13 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         self.pre_price = self.unit_price
         super(Product, self).save(*args, **kwargs)
+
+
+class Favourite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    favcount = models.IntegerField(default=0)
+    create = jmodels.jDateTimeField(auto_now_add=True)
 
 
 class Color(models.Model):
