@@ -10,11 +10,7 @@ from django.core.paginator import Paginator
 from django.template.defaulttags import register
 from .filters import ProductFilter
 from urllib.parse import urlencode
-
-
-@register.filter
-def get_range(value):
-    return range(value)
+from django.http import JsonResponse
 
 
 def mainpage(request):
@@ -63,7 +59,7 @@ def all_products(request, slug=None):
         del dataget['page']
     context = {
         'products': pageobjects, 'category': category, 'form': form, 'maxprice': maxprice, 'minprice': minprice,
-        'pageindex': pageindex, 'pagecount': range(1, pagecount+1), 'filter': filtr, 'dataget': urlencode(dataget),
+        'pageindex': pageindex, 'pagecount': range(1, pagecount + 1), 'filter': filtr, 'dataget': urlencode(dataget),
 
     }
     return render(request, 'home/products.html', context=context)
@@ -85,6 +81,10 @@ def product_detail(request, slug):
     comments = Comment.objects.filter(product__slug=slug, is_reply=False)
     similar = product.tags.similar_objects()[:8]
     cart_form = CartForm()
+    context = {
+        'product': product, 'similar': similar, 'comments': comments, 'comment_form': comment_form,
+        'cart_form': cart_form,
+    }
     if product.status is not None:
         variants = Variant.objects.filter(product__slug=slug)
         if request.method == 'POST':
@@ -92,17 +92,11 @@ def product_detail(request, slug):
             variant = Variant.objects.get(id=varid)
         elif request.method == 'GET':
             variant = Variant.objects.get(id=variants[0].id)
-        context = {
-            'product': product, 'variant': variant, 'variants': variants, 'similar': similar, 'cart_form': cart_form,
-            'is_liked': is_liked, 'is_favourite': is_favourite, 'comment_form': comment_form, 'comments': comments,
-            'variant_price_tracker': var_pricetracker,
-        }
-        return render(request, 'home/detail.html', context=context)
+        return render(request, 'home/detail.html', context=context.update(
+            {'variant': variant, 'variants': variants, 'cart_form': cart_form,
+             'variant_price_tracker': var_pricetracker}))
     else:
-        return render(request, 'home/detail.html', {
-            'product': product, 'similar': similar, 'comment_form': comment_form,
-            'comments': comments, 'cart_form': cart_form, 'price_tracker': p_pricetracker,
-        })
+        return render(request, 'home/detail.html', context=context.update({'price_tracker': p_pricetracker}))
 
 
 def like_product(request, pid):
@@ -195,7 +189,7 @@ def contact(request):
         subject, email = request.POST['subject'], request.POST['email']
         msg = request.POST['message']
         emailform = EmailMessage(
-            'contact form', f'{subject}\n{email}\n\t{msg}', 'dev-shop.ir<reply>', ('soroush8fathi@gmail.com', )
+            'contact form', f'{subject}\n{email}\n\t{msg}', 'dev-shop.ir<reply>', ('soroush8fathi@gmail.com',)
         )
         emailform.send(fail_silently=False)
     return render(request, 'home/contact.html')
