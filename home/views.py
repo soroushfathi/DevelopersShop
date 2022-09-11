@@ -85,12 +85,6 @@ def product_detail(request, slug):
     comments = Comment.objects.filter(product__slug=slug, is_reply=False)
     similar = product.tags.similar_objects()[:8]
     cart_form = CartForm()
-    is_liked = False
-    if product.like.filter(id=request.user.id).exists():
-        is_liked = True
-    is_favourite = False
-    if product.favour_users.filter(id=request.user.id).exists():
-        is_favourite = True
     if product.status is not None:
         variants = Variant.objects.filter(product__slug=slug)
         if request.method == 'POST':
@@ -106,8 +100,8 @@ def product_detail(request, slug):
         return render(request, 'home/detail.html', context=context)
     else:
         return render(request, 'home/detail.html', {
-            'product': product, 'similar': similar, 'comment_form': comment_form, 'is_favourite': is_favourite,
-            'comments': comments, 'cart_form': cart_form, 'is_liked': is_liked, 'price_tracker': p_pricetracker,
+            'product': product, 'similar': similar, 'comment_form': comment_form,
+            'comments': comments, 'cart_form': cart_form, 'price_tracker': p_pricetracker,
         })
 
 
