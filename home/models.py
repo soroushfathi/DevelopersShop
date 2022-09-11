@@ -109,8 +109,11 @@ class Product(models.Model):
     def price(self):
         return self.unit_price
 
-    def save(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.pre_price = self.unit_price
+
+    def save(self, *args, **kwargs):
         super(Product, self).save(*args, **kwargs)
 
 
@@ -247,8 +250,7 @@ class PriceTracker(models.Model):
 
 
 def product_price_tracker(sender, instance, created, *arsg, **kwargs):
-    # if instance.pre_price != instance.unit_price:
-    if instance.is_changed:
+    if instance.pre_price != instance.unit_price:
         PriceTracker.objects.create(name=instance.name, product=instance,
                                     unit_price=instance.unit_price, update=instance.update)
 
