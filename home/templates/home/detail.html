@@ -60,14 +60,14 @@
         <h2>{{ product.name }}</h2><br/>
         <img src="{{ product.image.url }}" style="width: 140px; height: 140px;  box-shadow: #2f56ff 0 0 8px;" alt=""/>
         <p>{{ product.information | safe }}</p>
-        {% if is_liked %}
+        {% if request.user in product.like.all %}
             <a href="{% url 'home:like' product.id %}"><i class="fa fa-heart" style="color: red; font-size: 25px;"></i></a>
         {% else %}
             <a href="{% url 'home:like' product.id %}"><i class="fa fa-heart-o"
                                                           style="color: red; font-size: 25px;"></i></a>
         {% endif %}
         <span class="btn btn-info">like:{{ product.like_count }}</span>
-        {% if is_favourite %}
+        {% if request.user in product.favour_users.all %}
             <a href="{% url 'home:favourite' product.id %}">
                 <i class="fa fa-bookmark" style="color: #000062; font-size: 25px;"></i>
             </a>
