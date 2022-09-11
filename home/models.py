@@ -58,7 +58,6 @@ class Product(models.Model):
     like_count = models.IntegerField(default=0)
     unlike = models.ManyToManyField(User, blank=True, related_name='user_unlike')
     unlike_count = models.IntegerField(default=0)
-    favourite_users = models.ManyToManyField(User, blank=True, related_name='favourits', through='Favourite')
     favcount = models.IntegerField(default=0)
     sellcount = models.IntegerField(default=0)
     is_changed = models.BooleanField(default=False)

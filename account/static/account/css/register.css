@@ -1,7 +1,16 @@
-input {
-    color: brown;
-}
-
 body {
     background-color: darkgreen;
+}
+
+form {
+    background-color: indianred;
+    margin: 150px auto;
+    padding: 15px;
+    width: 400px;
+    box-shadow: #1d1d1d 0 0 10px;
+}
+
+input {
+    color: greenyellow;
+    padding: 3px;
 }
