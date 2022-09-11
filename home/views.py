@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Category, Product, Variant, CommentForm, Comment, ReplyForm, Images, PriceTracker, Views
+from .models import Category, Product, Variant, CommentForm, Comment, ReplyForm, Images, PriceTracker, View
 from cart.models import Cart, CartForm
 from .forms import SearchForm
 from django.contrib import messages
@@ -64,17 +64,18 @@ def all_products(request, slug=None):
     context = {
         'products': pageobjects, 'category': category, 'form': form, 'maxprice': maxprice, 'minprice': minprice,
         'pageindex': pageindex, 'pagecount': range(1, pagecount+1), 'filter': filtr, 'dataget': urlencode(dataget),
+
     }
     return render(request, 'home/products.html', context=context)
 
 
 def product_detail(request, slug):
-    # product = Product.objects.get(slug=slug)
-    product = get_object_or_404(Product, slug=slug)
+    product = Product.objects.get(slug=slug)
+    # product = get_object_or_404(Product, slug=slug)
     ip = request.META.get('REMOTE_ADDR')
-    view = Views.objects.filter(product__slug=slug, ip=ip)
+    view = View.objects.filter(product__slug=slug, ip=ip)
     if not view.exists():
-        Views.objects.create(ip=ip, product_id=product.id)
+        View.objects.create(ip=ip, product_id=product.id)
         product.viewcount += 1
         product.save()
     p_pricetracker = PriceTracker.objects.filter(product__slug=slug)
@@ -88,7 +89,7 @@ def product_detail(request, slug):
     if product.like.filter(id=request.user.id).exists():
         is_liked = True
     is_favourite = False
-    if product.favourite_users.filter(id=request.user.id).exists():
+    if product.favour_users.filter(id=request.user.id).exists():
         is_favourite = True
     if product.status is not None:
         variants = Variant.objects.filter(product__slug=slug)
@@ -184,12 +185,12 @@ def product_search(request):
 def add_favourite(request, pid):
     url = request.META.get('HTTP_REFERER')
     product = Product.objects.get(id=pid)
-    if product.favourite_users.filter(id=request.user.id).exists():
-        product.favourite_users.remove(request.user)
+    if product.favour_users.filter(id=request.user.id).exists():
+        product.favour_users.remove(request.user)
         product.favcount -= 1
         product.save()
     else:
-        product.favourite_users.add(request.user)
+        product.favour_users.add(request.user)
         product.favcount += 1
         product.save()
     return redirect(url)
