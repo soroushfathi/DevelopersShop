@@ -13,9 +13,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='product',
-            name='favourite_users',
-            field=models.ManyToManyField(blank=True, related_name='favourits', through='home.Favourite', to=settings.AUTH_USER_MODEL),
-        ),
+        # migrations.AddField(
+        #     model_name='product',
+        #     name='favourite_users',
+        #     field=models.ManyToManyField(blank=True, related_name='favourits', through='home.Favourite', to=settings.AUTH_USER_MODEL),
+        # ),
     ]

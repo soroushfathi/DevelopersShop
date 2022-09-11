@@ -7,6 +7,8 @@ from taggit.managers import TaggableManager
 from django.contrib.auth.models import User
 from django_jalali.db import models as jmodels
 from django.db.models.signals import post_save, pre_save
+
+
 # from ckeditor_uploader.fields import RichTextUploadingField # for adding images
 
 
@@ -63,6 +65,7 @@ class Product(models.Model):
     is_changed = models.BooleanField(default=False)
     views = models.ManyToManyField(User, blank=True, related_name='poducts_view')
     viewcount = models.IntegerField(default=0)
+    favour_users = models.ManyToManyField(User, blank=True, related_name='favourits')
 
     def __str__(self):
         return self.name
@@ -166,6 +169,10 @@ class Variant(models.Model):
     update = jmodels.jDateTimeField(auto_now=True)
     is_changed = models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name = 'گونه'
+        verbose_name_plural = 'گونه ها'
+
     def __str__(self):
         return self.name
 
@@ -175,10 +182,6 @@ class Variant(models.Model):
             return self.unit_price
         else:
             return self.unit_price * (100 - self.discount) // 100
-
-    class Meta:
-        verbose_name = 'گونه'
-        verbose_name_plural = 'گونه ها'
 
 
 class Comment(models.Model):
@@ -251,6 +254,7 @@ class PriceTracker(models.Model):
 
 def product_price_tracker(sender, instance, created, *arsg, **kwargs):
     if instance.pre_price != instance.unit_price:
+        print(instance.pre_price, ' ', instance.unit_price)
         PriceTracker.objects.create(name=instance.name, product=instance,
                                     unit_price=instance.unit_price, update=instance.update)
 

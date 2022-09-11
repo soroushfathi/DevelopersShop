@@ -12,12 +12,19 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='product',
-            name='favourite_users',
-            field=models.ManyToManyField(blank=True, related_name='favourits', to=settings.AUTH_USER_MODEL),
-        ),
-        migrations.DeleteModel(
-            name='Favourite',
-        ),
+        # migrations.RemoveField(
+        #     model_name='product',
+        #     name='favourite_users',
+        #     field=models.ManyToManyField(blank=True, related_name='favourits', through='home.Favourite',
+        #                                  to=settings.AUTH_USER_MODEL),
+        # ),
+        # migrations.AddField(
+        #     model_name='product',
+        #     name='favourite_users',
+        #     field=models.ManyToManyField(blank=True, related_name='favourits', through='home.Favourite',
+        #                                  to=settings.AUTH_USER_MODEL),
+        # ),
+        # migrations.DeleteModel(
+        #     name='Favourite',
+        # ),
     ]

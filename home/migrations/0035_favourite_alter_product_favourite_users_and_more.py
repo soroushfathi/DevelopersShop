@@ -15,27 +15,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='Favourite',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('favcount', models.IntegerField(default=0)),
-                ('create', django_jalali.db.models.jDateTimeField(auto_now_add=True)),
-            ],
-        ),
-        migrations.AlterField(
-            model_name='product',
-            name='favourite_users',
-            field=models.ManyToManyField(blank=True, related_name='favourits', through='home.Favourite', to=settings.AUTH_USER_MODEL),
-        ),
-        migrations.AddField(
-            model_name='favourite',
-            name='product',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='home.product'),
-        ),
-        migrations.AddField(
-            model_name='favourite',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='auth.user'),
-        ),
+
     ]
