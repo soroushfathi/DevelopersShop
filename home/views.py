@@ -83,7 +83,7 @@ def product_detail(request, slug):
     cart_form = CartForm()
     context = {
         'product': product, 'similar': similar, 'comments': comments, 'comment_form': comment_form,
-        'cart_form': cart_form,
+        'cart_form': cart_form, 'product_id': product.id,
     }
     if product.status is not None:
         variants = Variant.objects.filter(product__slug=slug)
@@ -92,11 +92,15 @@ def product_detail(request, slug):
             variant = Variant.objects.get(id=varid)
         elif request.method == 'GET':
             variant = Variant.objects.get(id=variants[0].id)
-        return render(request, 'home/detail.html', context=context.update(
-            {'variant': variant, 'variants': variants, 'cart_form': cart_form,
-             'variant_price_tracker': var_pricetracker}))
+        return render(request, 'home/detail.html',
+                      context={'product': product, 'similar': similar, 'comments': comments, 'cart_form': cart_form,
+                               'comment_form': comment_form, 'product_id': product.id, 'variant': variant,
+                               'variants': variants, 'variant_price_tracker': var_pricetracker})
     else:
-        return render(request, 'home/detail.html', context=context.update({'price_tracker': p_pricetracker}))
+        return render(request, 'home/detail.html',
+                      context={'price_tracker': p_pricetracker, 'product': product, 'similar': similar,
+                               'comments': comments, 'comment_form': comment_form,
+                               'cart_form': cart_form, 'product_id': product.id, })
 
 
 def like_product(request, pid):
