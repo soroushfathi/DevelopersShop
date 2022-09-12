@@ -5,9 +5,10 @@ from django.forms import ModelForm
 
 class Cart(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE, blank=True, null=True)
     quantity = models.IntegerField()
+    sessionkey = models.CharField(max_length=300, blank=True, null=True)
 
     def __str__(self):
         return self.user.username
