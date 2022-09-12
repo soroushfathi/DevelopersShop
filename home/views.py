@@ -177,14 +177,16 @@ def product_search(request):
 def add_favourite(request, pid):
     url = request.META.get('HTTP_REFERER')
     product = Product.objects.get(id=pid)
-    if product.favour_users.filter(id=request.user.id).exists():
-        product.favour_users.remove(request.user)
-        product.favcount -= 1
-        product.save()
+    if request.user.is_authenticated:
+        if product.favour_users.filter(id=request.user.id).exists():
+            product.favour_users.remove(request.user)
+            product.favcount -= 1
+        else:
+            product.favour_users.add(request.user)
+            product.favcount += 1
     else:
-        product.favour_users.add(request.user)
-        product.favcount += 1
-        product.save()
+        messages.success(request, 'برای ذخیزه پست ابتدا باید وارد شوید', 'danger')
+    product.save()
     return redirect(url)
 
 
