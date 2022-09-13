@@ -54,6 +54,23 @@
             }
         </script>
     {% endif %}
+{#    <script>#}
+{#        $(document).on('click', '#bookmark', function (event) {#}
+{#            event.preventDefault();#}
+{#            $.ajax({#}
+{#                url : $(this).attr('href'),#}
+{#                type : 'GET',#}
+{#                data : $(this).serialize(),#}
+{#                dataType: 'json',#}
+{#                success : function (success){#}
+{#                    alert('موفق')#}
+{#                },#}
+{#                error :  function (error){#}
+{#                    alert('ناموفق')#}
+{#                },#}
+{#            })#}
+{#        });#}
+{#    </script>#}
 {% endblock %}
 {% block body %}
     <div class="container">
@@ -61,19 +78,22 @@
         <img src="{{ product.image.url }}" style="width: 140px; height: 140px;  box-shadow: #2f56ff 0 0 8px;" alt=""/>
         <p>{{ product.information | safe }}</p>
         {% if request.user in product.like.all %}
-            <a href="{% url 'home:like' product.id %}"><i class="fa fa-heart" style="color: red; font-size: 25px;"></i></a>
+            <a href="{% url 'home:like' product.id %}">
+                <i class="fa fa-heart" style="color: red; font-size: 25px;"></i>
+            </a>
         {% else %}
-            <a href="{% url 'home:like' product.id %}"><i class="fa fa-heart-o"
-                                                          style="color: red; font-size: 25px;"></i></a>
+            <a href="{% url 'home:like' product.id %}">
+                <i class="fa fa-heart-o" style="color: red; font-size: 25px;"></i>
+            </a>
         {% endif %}
         <span class="btn btn-info">like:{{ product.like_count }}</span>
         {% if request.user in product.favour_users.all %}
             <a href="{% url 'home:favourite' product.id %}">
-                <i class="fa fa-bookmark" style="color: #000062; font-size: 25px;"></i>
+                <i id="bookmark" class="fa fa-bookmark" style="color: #000062; font-size: 25px;"></i>
             </a>
         {% else %}
             <a href="{% url 'home:favourite' product.id %}">
-                <i class="fa fa-bookmark-o" style="color: black; font-size: 25px;"></i>
+                <i id="bookmark" class="fa fa-bookmark-o" style="color: black; font-size: 25px;"></i>
             </a>
         {% endif %}
         <hr/>
