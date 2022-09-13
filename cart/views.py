@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from home.models import Product
+from home.models import Product, Variant
 from .models import Cart, CartForm, Compare
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from order.forms import OrderForm
 from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 
 
 def cart_detail(request):
@@ -33,7 +34,6 @@ def cart_detail(request):
         return render(request, 'cart/cart.html', context=context)
 
 
-@require_POST
 def add_cart(request, pid):
     url = request.META.get('HTTP_REFERER')
     product = Product.objects.get(id=pid)
@@ -78,11 +78,57 @@ def add_cart(request, pid):
             getcart.save()
         else:
             if is_auth:
-                Cart.objects.create(product_id=pid, user_id=request.user.id, variant_id=var_id, quantity=quan)
+                Cart.objects.create(product_id=pid, user_id=request.user.id, variant_id=var_id, quantity=quan, sessionkey=None)
             else:
-                Cart.objects.create(user=None, product_id=pid, variant_id=var_id, quantity=quan)
+                Cart.objects.create(user=None, product_id=pid, variant_id=var_id, quantity=quan, sessionkey=session_key)
             messages.success(request, 'تعداد {} تا از این محصول با موفقیت به سبد خرید اضافه شد'.format(quan), 'success')
     return redirect(url)
+    # return JsonResponse({'quantity': quan})
+
+
+def add_cart_single(request):
+    print("##################################################333")
+    quan = request.GET.get('quantity')
+    variant_id = request.GET.get('variant_id')
+    product = Product.objects.get(id=request.GET.get('product_id'))
+    is_auth = request.user.is_authenticated
+    session_key = request.session.session_key
+    user_id = request.user.id
+
+    if product.status != 'None':
+        cart = Cart.objects.filter(user_id=user_id if is_auth else None, variant_id=variant_id, sessionkey=session_key if not is_auth else None)
+        flag = True if cart.exists() else False
+    else:
+        cart = Cart.objects.filter(user_id=user_id if is_auth else None, product_id=pid, sessionkey=session_key if not is_auth else None)
+        flag = True if cart.exists() else False
+
+    if flag:
+        if product.status != 'None':
+            getcart = Cart.objects.get(user_id=user_id if is_auth else None, product_id=pid, variant_id=variant_id, sessionkey=session_key if not is_auth else None)
+            if getcart.variant.amount >= getcart.quantity + quan > 0:
+                getcart.quantity += quan
+            elif getcart.quantity + quan > getcart.variant.amount:
+                messages.error(request, 'درخواست بیش از حد موجودی است.', 'danger')
+            elif getcart.quantity + quan <= 0:
+                messages.error(request, 'تعداد محصول نمیتواند کمتر از 1 باشد.', 'danger')
+        else:
+            getcart = Cart.objects.get(user_id=user_id if is_auth else None, product_id=pid,
+                                       sessionkey=session_key if not is_auth else None)
+            if getcart.product.amount >= getcart.quantity + quan > 0:
+                getcart.quantity += quan
+            elif getcart.quantity + quan > getcart.product.amount:
+                messages.error(request, 'درخواست بیش از حد موجودی است.', 'danger')
+            elif getcart.product + quan <= 0:
+                messages.error(request, 'تعداد محصول نمیتواند کمتر از 1 باشد.', 'danger')
+        getcart.save()
+    else:
+        if is_auth:
+            Cart.objects.create(product_id=pid, user_id=request.user.id, variant_id=variant_id, quantity=quan,
+                                sessionkey=None)
+        else:
+            Cart.objects.create(user=None, product_id=pid, variant_id=variant_id, quantity=quan, sessionkey=session_key)
+        messages.success(request, 'تعداد {} تا از این محصول با موفقیت به سبد خرید اضافه شد'.format(quan), 'success')
+    return JsonResponse({'success': 'done'})
 
 
 def remove_cart(request, cid):
