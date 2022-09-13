@@ -1,19 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}سبد خرید{% endblock %}
-{% block script %}
-    <script>
-        document.getElementById('postalcode').placeholder = "این فیلد نباید خالی باشد";
-
-        function IsEmpty() {
-            if (document.forms['order'].postalCode.value === "") {
-                alert("کد پستی نباید خالی باشد");
-                return false;
-            }
-            return true;
-        }
-    </script>
-{% endblock %}
 {% block body %}
     <div class="container">
         <div class="row m-3">
@@ -53,59 +40,53 @@
                         </td>
                         <td>
                             <div>
-                                {% if product.status != 'None' %}
-                                    <form method="post" action="{% url 'cart:add_cart' cart.product.id %}">
-                                        {% csrf_token %}
+                                <form method="post" action="{% url 'cart:add_cart' cart.product.id %}">
+                                    {% csrf_token %}
+                                    {% if product.status != 'None' %}
                                         <input type="hidden" name="varid" value="{{ cart.variant.id }}">
-                                        <input type="hidden" name="quantity" min="1" value="1"
-                                               max="{{ cart.variant.amount }}"
-                                               required
+                                        <input type="hidden" name="quantity" id="quantity{{ cart.variant.id }}" min="1"
+                                               value="1" max="{{ cart.variant.amount }}" required
                                                oninvalid="setCustomValidity('تعداد بیش از حد موجودی است')"
                                                class="form-control" style="height: 25px;">
                                         <button class="btn btn-success" type="submit">
-                                            <i class="fa fa-plus-circle" style="font-size: 14px;"></i>
+                                            <i class="fa fa-angle-up" style="font-size: 14px;"></i>
                                         </button>
-                                    </form>
-                                {% else %}
-                                    <form method="post" action="{% url 'cart:add_cart' product.id %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="quantity" min="1" value="1"
-                                               max="{{ cart.product.amount }}"
-                                               required
+                                    {% else %}
+                                        <input type="hidden" name="quantity" id="quantity{{ cart.product.id }}" min="1"
+                                               value="1" max="{{ cart.product.amount }}" required
                                                oninvalid="setCustomValidity('تعداد بیش از حد موجودی است')"
                                                class="form-control" style="height: 25px;">
                                         <button class="btn btn-success" type="submit">
-                                            <i class="fa fa-plus-circle" style="font-size: 14px;"></i>
+                                            <i class="fa fa-angle-up" style="font-size: 14px;"></i>
                                         </button>
-                                    </form>
-                                {% endif %}
+                                    {% endif %}
+                                </form>
                             </div>
-                            {{ cart.quantity }}
+                            <span id="quantity">{{ cart.quantity }}</span>
                             <div>
-                                {% if product.status != 'None' %}
-                                    <form method="post" action="{% url 'cart:add_cart' cart.product.id %}">
-                                        {% csrf_token %}
+                                <form method="post" action="{% url 'cart:add_cart' cart.product.id %}">
+                                    {% csrf_token %}
+                                    {% if product.status != 'None' %}
                                         <input type="hidden" name="varid" value="{{ cart.variant.id }}">
-                                        <input type="hidden" name="quantity" min="-1" value="-1"
-                                               max="{{ cart.variant.amount }}" required
+                                        <input type="hidden" name="quantity" id="quantity{{ cart.variant.id }}" min="-1"
+                                               value="-1" max="{{ cart.variant.amount }}" required
                                                oninvalid="setCustomValidity('تعداد بیش از حد موجودی است')"
                                                class="form-control" style="height: 25px;">
                                         <button class="btn btn-success" type="submit">
-                                            <i class="fa fa-minus-circle" style="font-size: 14px;"></i>
+                                            <i class="fa fa-angle-down" style="font-size: 14px;"
+                                               onclick="remove('{{ cart.variant.id }}')"></i>
                                         </button>
-                                    </form>
-                                {% else %}
-                                    <form method="post" action="{% url 'cart:add_cart' product.id %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="quantity" min="-1" value="-1"
-                                               max="{{ cart.product.amount }}" required
+                                    {% else %}
+                                        <input type="hidden" name="quantity" id="quantity{{ cart.product.id }}" min="-1"
+                                               value="-1" max="{{ cart.product.amount }}" required
                                                oninvalid="setCustomValidity('تعداد بیش از حد موجودی است')"
                                                class="form-control" style="height: 25px;">
                                         <button class="btn btn-success" type="submit">
-                                            <i class="fa fa-minus-circle" style="font-size: 14px;"></i>
+                                            <i class="fa fa-angle-down" style="font-size: 14px;"
+                                               onclick="remove('{{ cart.product.id }}')"></i>
                                         </button>
-                                    </form>
-                                {% endif %}
+                                    {% endif %}
+                                </form>
                             </div>
                         </td>
                         <td>
@@ -117,7 +98,6 @@
                         </td>
                         <td>
                             <a href="{% url 'cart:remove_cart' cart.id %}">
-                                {#                            <img src="{% static 'cart/img/icon-remove.png' %}" alt="">#}
                                 <i class="fa fa-trash" style="color: red; font-size: 40px;"></i>
                             </a>
                         </td>
@@ -132,9 +112,73 @@
             </table>
         </div>
         <div class="row m-5">
-            <button class="btn btn-outline-success font-weight-bold" type="button" onclick="return IsEmpty();" style="font-size: 13px;">
-                <a href="{% url 'order:create' %}" style="text-decoration: none; color: #ff4d00;">افزودن به لیست سفارش</a>
-            </button>
+            {% if user.is_authenticated %}
+                <button class="btn btn-outline-success font-weight-bold" type="button" onclick="return IsEmpty();"
+                        style="font-size: 13px;">
+                    <a href="{% url 'order:create' %}" style="text-decoration: none; color: #ff4d00;">افزودن به لیست
+                        سفارش</a>
+                </button>
+            {% else %}
+                <p class="text-warning" style="font-size: 14pt;">برای ایجاد سفارش باید ثبت نام کنید</p>
+            {% endif %}
         </div>
     </div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'js/cart.js' %}"></script>
+    <script>
+        document.getElementById('postalcode').placeholder = "این فیلد نباید خالی باشد";
+
+        function IsEmpty() {
+            if (document.forms['order'].postalCode.value === "") {
+                alert("کد پستی نباید خالی باشد");
+                return false;
+            }
+            return true;
+        }
+
+
+        function add(id, pid) {
+            const quan = $("#quantity" + id).val();
+            const max = $("#quantity" + id).attr('max');
+            let quantity = 0;
+            quantity += parseInt(quan) + 1;
+            if (quantity <= max) {
+                $("#quantity" + id).val(quantity);
+                $.ajax({
+                    url: "{% url 'cart:add_single_cart' %}",
+                    type: "GET",
+                    data: {variant_id: id, product_id: pid, quantity: 1},
+                    success: function (data) {
+                        alert(quantity)
+                        alert(data)
+                    },
+                    error: function (data) {
+                        alert(quantity)
+                        alert(data)
+                    }
+                })
+            }
+        }
+
+        $("#remove-form").submit(function (e) {
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            const form = $(this);
+            const actionUrl = form.attr('action');
+
+            $.ajax({
+                type: "GET",
+                url: actionUrl,
+                data: form.serialize(), // serializes the form's elements.
+                success: function (response) {
+                    $("quantity").html(response.quantity)
+                }
+            }).done(function (response) {
+                $("quantity").html(response.quantity)
+            });
+
+        });
+    </script>
 {% endblock %}
