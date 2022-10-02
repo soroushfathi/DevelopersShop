@@ -49,6 +49,10 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'django_filters',
     'django_jalali',
+
+    # 3'rd party
+    'django_celery',
+    'django_celery_result',
 ]
 
 MIDDLEWARE = [
@@ -184,3 +188,14 @@ SECURE_FRAME_DENY = False
 CELERY_TIMEZONE = "Iran/Tehran"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+
+# celery setting.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.backends.db.DatabaseCache',
+        'LOCATION': 'my_cache_table',
+    }
+}
