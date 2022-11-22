@@ -38,8 +38,11 @@ def all_products(request, slug=None):
     #         messages.error(request, 'مقدار سرچ نباید خالی باشد', 'danger')
     #     return render(request, 'home/products.html', {'products': products, 'form': form}
     products = Product.objects.all()
-    maxprice = int(products.aggregate(unit_price=Max('unit_price'))['unit_price'])
-    minprice = int(products.aggregate(unit_price=Min('unit_price'))['unit_price'])
+    if mp:=products.aggregate(unit_price=Max('unit_price'))['unit_price']:
+        maxprice = mp
+        
+    if mp:=products.aggregate(unit_price=Min('unit_price'))['unit_price']:
+        minprice = mp
     filtr = ProductFilter(request.GET, queryset=products)
     products = filtr.qs
     perpage = 8
