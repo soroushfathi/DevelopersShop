@@ -1,8 +1,0 @@
-six~=1.16.0
-Django~=4.0
-django-ckeditor~=6.2.0
-sorl-thumbnail
-jdatetime~=4.1.0
-django-jalali
-django-filter~=22.1
-psycopg2
