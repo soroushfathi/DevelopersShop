@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-f^r^rjhgk)91(kce5%-nz=!i*8q$1rnwi90&kyri0n&i%s_u*1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -89,18 +89,18 @@ WSGI_APPLICATION = 'DevelopersShop.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
     # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'devshop',
-    #     'USER': 'postgres',
-    #     'PASSWORD': 'SF81sf',
-    #     'HOST': '127.0.0.1',
-    #     'POTR': '5432',
-    # }
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # },
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'devshop',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': '127.0.0.1',
+        'POTR': '5432',
+    }
 }
 
 # Password validation
