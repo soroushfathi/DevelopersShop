@@ -1,0 +1,29 @@
+/*
+	7.2. Desktop
+			7.2. Max Desktop
+ */
+
+.product-item{
+	margin-bottom:40px;
+}
+.product-flat{
+	.product-item{
+		margin:0;
+	}
+	
+}
+.product-custom-bg{
+	.product-item{
+		margin:0;
+	}
+	
+}
+.quickview-wrapper{
+	overflow-y:scroll;
+	.quick-modal{
+		margin-top:20px; 
+	}
+}
+.product-standard .product-item{
+	margin-bottom:45px;
+}

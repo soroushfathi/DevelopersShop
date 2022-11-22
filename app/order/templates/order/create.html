@@ -1,0 +1,48 @@
+{% include 'base.html' %}
+{% block body %}
+    <div class="container">
+        <form method="post" action="{% url 'order:create' %}" name="order" class="cart">
+            {% csrf_token %}
+            <div class="col-4">
+                {% if orderform %}
+                    {% for field in orderform %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="cart">
+                <p>
+                    <label for="fname">نام
+                        <input type="text" name="first_name" id="fname" class="form-control"
+                               value="{{ user.first_name }}">
+                    </label>
+                    <label for="lname">نام خانوادگی
+                        <input type="text" name="last_name" id="lname" class="form-control"
+                               value="{{ user.last_name }}">
+                    </label>
+                </p>
+                <p>
+                    <label for="postalcode">کدپستی
+                        <input type="text" name="postal_code" id="postalcode" class="form-control border-primary">
+                    </label>
+                    <label for="email">ایمیل
+                        <input type="text" name="email" id="email" class="form-control">
+                    </label>
+                </p>
+                <label for="address">آدرس
+                    <input type="text" name="address" id="address" class="form-control border-primary"
+                           value="{{ prof.address }}">
+                </label>
+            </div>
+            <button class="btn btn-outline-success font-weight-bold" type="submit"
+                    onclick="return IsEmpty();"
+                    style="font-size: 13px;">
+                نهایی کردن سفارش
+            </button>
+        </form>
+    </div>
+{% endblock %}

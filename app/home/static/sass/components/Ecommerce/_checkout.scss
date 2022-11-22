@@ -1,0 +1,123 @@
+/*
+    5.3. Checkout Page
+ */
+
+.checkout-login {
+    .form-login {
+        display: none;
+        p {
+            color: #a4a4a4;
+            line-height: 24px;
+            margin-bottom: 20px;
+        }
+    }
+}
+
+.form-cp {
+    display: none;
+}
+
+.box-toggle {
+    font-weight: 500;
+    color: #666666;
+    width: 100%;
+    border: 2px solid #f0f0f0;
+    height: 105px;
+    line-height: 105px;
+    @include border-radius(10px);
+    @include flex;
+    @include align-items(center);
+    @media(max-width: 812px) {
+        @include justify-content(center);
+    }
+    @media(max-width:$screen-xs) {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    @media(min-width:$screen-sm-max) {
+        padding-left: 70px;
+    }
+    img {
+        margin-right: 20px;
+        @media(max-width: 812px) {
+            margin-right:5px;
+        }
+        @media(max-width:$screen-xs) {
+            display: none;
+        }
+    }
+    a {
+        margin-left: 4px;
+    }
+}
+
+.box-toggle {
+    margin-bottom: 35px;
+}
+
+
+
+.checkout-cp {
+    input {
+        background: #f8f8f8;
+    }
+}
+
+
+
+.btn-cp-inline {
+    width: 128px;
+    height: 54px;
+    line-height: 54px;
+    padding: 0;
+    @include border-radius(0);
+    float: right;
+}
+
+.checkout {
+    .cart-list {
+        .product-price {
+            float: none;
+        }
+        .quantity {
+            float: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    }
+    .cart-list .list>li .text .product-name {
+        margin-bottom: 5px;
+    }
+}
+
+.box-payment {
+    ul {
+        li:first-child {
+            border: 0;
+        }
+        li {
+            .payment {
+                label {
+                    color: #000;
+                }
+                .no-checkbox {
+                    color: #a4a4a4;
+                    line-height: 18px;
+                    font-size: 12px;
+                    padding-left: 20px;
+                    margin-bottom: 35px;
+                }
+            }
+        }
+    }
+}
+
+.btn-checkout {
+    height: 83px;
+    line-height: 83px;
+    font-size: 18px;
+}
+
+.form-note {
+    box-shadow: none;
+}

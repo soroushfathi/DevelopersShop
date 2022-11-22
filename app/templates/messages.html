@@ -1,0 +1,21 @@
+{% block script %}
+    <script>
+        // Get all info messages
+        const info_messages = document.getElementsByClassName('alert');
+        setTimeout(function () {
+            for (let i = 0; i < info_messages.length; i++) {
+                // Set display attribute as !important, neccessary when using bootstrap
+                info_messages[i].setAttribute('style', 'display:none !important');
+            }
+        }, 5000);
+    </script>
+{% endblock %}
+{% if messages %}
+    {% for msg in messages %}
+        <div class="container text-center">
+            <div {% if msg.tags %} class="alert alert-{{ msg.tags }}" role="alert" {% endif %} id="msg">
+                {{ msg }}
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}

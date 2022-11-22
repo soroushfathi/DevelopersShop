@@ -1,0 +1,97 @@
+//
+// Pagination (multiple pages)
+// --------------------------------------------------
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+  margin: $line-height-computed 0;
+  border-radius: $border-radius-base;
+
+  > li {
+    display: inline; // Remove list-style and block-level defaults
+    > a,
+    > span {
+      position: relative;
+      float: left; // Collapse white-space
+      padding: 10px 21px;
+      line-height: $line-height-base;
+      text-decoration: none;
+      color: $pagination-color;
+      background-color: $pagination-bg;
+      border: 1px solid #f0f0f0;
+      border-top:2px solid #f0f0f0;
+      border-bottom:2px solid #f0f0f0;
+      margin-left: -1px;
+    }
+    &:first-child {
+      > a,
+      > span {
+        margin-left: 0;
+        @include border-left-radius(999px);
+        padding-left: 30px;
+        border-left:2px solid #f0f0f0;
+      }
+    }
+    &:last-child {
+      > a,
+      > span {
+        @include border-right-radius(999px);
+        padding-right: 30px;
+        border-right:2px solid #f0f0f0;
+      }
+    }
+  }
+
+  > li > a,
+  > li > span {
+    color: #999;
+    // &:hover,
+    // &:focus {
+    //   z-index: 2;
+    //   color: $pagination-hover-color;
+    //   background-color: $pagination-hover-bg;
+    //   border-color: $pagination-hover-border;
+    // }
+  }
+
+  > .active > a,
+  > .active > span {
+    color: #333333;
+    // &,
+    // &:hover,
+    // &:focus {
+    //   z-index: 3;
+    //   color: $pagination-active-color;
+    //   background-color: $pagination-active-bg;
+    //   border-color: $pagination-active-border;
+    //   cursor: default;
+    // }
+  }
+
+  > .disabled {
+    > span,
+    > span:hover,
+    > span:focus,
+    > a,
+    > a:hover,
+    > a:focus {
+      color: $pagination-disabled-color;
+      background-color: $pagination-disabled-bg;
+      border-color: $pagination-disabled-border;
+      cursor: $cursor-disabled;
+    }
+  }
+}
+
+// Sizing
+// --------------------------------------------------
+
+// Large
+.pagination-lg {
+  @include pagination-size($padding-large-vertical, $padding-large-horizontal, $font-size-large, $line-height-large, $border-radius-large);
+}
+
+// Small
+.pagination-sm {
+  @include pagination-size($padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small, $border-radius-small);
+}

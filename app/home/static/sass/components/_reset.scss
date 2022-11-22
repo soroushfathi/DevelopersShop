@@ -1,0 +1,102 @@
+/*
+    2. Reset
+      2.1. Reset
+
+ */
+
+html,
+body,
+ul,
+p,h1,h2,h3,h4,h5,
+ol {
+   margin: 0;
+  padding: 0;
+}
+
+body{
+	font-family:$base-font-family;
+	color:$base-font-color;
+	font-size:$base-font-size;
+}
+a{
+	color:#000000;
+	
+}
+a:hover, a:focus{
+	color: $color-hover;
+	text-decoration:none;
+	outline:none;
+  
+}
+
+ul,li{
+	list-style:none;
+}
+img{
+	display:inline ;
+	max-width:100%;
+	}
+input,textarea,button{
+	@include border-radius(0px);
+}
+
+button{
+  border:none;
+  box-shadow:none;
+}
+*{
+    outline:none;
+}
+body {
+  overflow-x: hidden;
+  position: relative;
+  right: 0;
+}
+
+.pushmenu { /*this is the nav*/
+  background: #1d1d1f;
+  
+  width: 362px;
+  height: 100%;
+  top: 0;
+  z-index: 1000;
+  position: fixed;
+  &.pushmenu-left{
+    background:transparent;
+    width:417px;
+  }
+}
+.pushmenu-left { right: -417px; }
+.pushmenu-left.pushmenu-open { right: 0; }
+.pushmenu-push-toright { right: 362px; }
+.pushmenu-push-toright-cart{ right:417px;}
+/*Transition*/
+.pushmenu, body {
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  z-index: 5;
+}
+.pushmenu-push-toright .wrappage{
+  position: relative;
+}
+.pushmenu-push-toright-cart .wrappage:after{
+  position: absolute;
+  background: rgba(29, 29, 31, 0.6) none repeat scroll 0 0;
+  content: "";
+  height: 100%;
+  width: 100%;
+  left: 0px;
+  top: 0px;
+  z-index: 9999;
+  cursor: pointer;
+}
+@media(max-width:320px){
+    // cart
+  .pushmenu{width:280px;}
+  .pushmenu-left { right: -280px; }
+  .pushmenu-push-toright-cart { right: 280px; }
+  .pushmenu.pushmenu-left{width:280px;}
+  .menu-social{width:280px;}
+  .cart-bottom{width:300px;}
+}

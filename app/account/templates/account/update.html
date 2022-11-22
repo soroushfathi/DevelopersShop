@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}اطلاعات حساب - تغییرات{% endblock %}
+{% block body %}
+    <div class="container">
+        <h1>بروزرسانی اطلاعات حساب کاربری</h1>
+        <form action="{% url 'account:update' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ user_form.as_p }}
+            {{ profile_form.as_p }}
+{#            <label for="username">نام کاربری#}
+{#                <input type="text" value="{{ user_form.username }}" name="username" id="username" class="form-control"/>#}
+{#            </label> <br/><br/>#}
+{#            <label for="first_name">نام و نام خانوادگی#}
+{#                <input type="text" name="first_name" id="first_name" value="{{ user_form.first_name }}" class="form-control" placeholder=""/>#}
+{#            </label> <br/><br/>#}
+{#            <label for="email">ایمیل#}
+{#                <input type="text" name="email" id="email" class="form-control" value="{{ user_form.email }}" placeholder=""/>#}
+{#            </label> <br/><br/>#}
+{#            <label for="phone">شماره تلفن#}
+{#                <input type="text" name="phone" id="phone_number" value="{{ profile_form.phone }}" class="form-control" placeholder=""/>#}
+{#            </label> <br/><br/>#}
+{#            <label for="address">آدرس#}
+{#                <input type="text" name="address" id="address"  value="{{ profile_form.address }}" class="form-control" placeholder=""/>#}
+{#            </label> <br/><br/>#}
+            <button type="submit">تایید</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% load static %}
+
+<header id="header" class="header-v1">
+    <div class="header-top-banner">
+        <a href="#"><img src="{% static 'img/banner-top.jpg' %}" alt="" class="img-reponsive"></a>
+    </div>
+    <div class="topbar">
+        <div class="container container-240">
+            <div class="row flex-right">
+                <div class="col-md-12 col-sm-12 col-xs-12 flex-right">
+                    <div class="topbar-right">
+                        <div class="element">
+                            <a href="{% url 'home:contact' %}" style="font-size: 16px;">ارتباط با ما</a>
+                        </div>
+                        <div class="element">&nbsp;
+                            <a href="{% url 'cart:cart_detail' %}" style="font-size: 16px;">
+                                <li class="fa fa-shopping-cart" style="color: #a300ff"></li>
+                                &nbsp;سبد خرید&nbsp;
+                            </a>
+                        </div>
+                        {% if user.is_authenticated %}
+                            <div class="element">
+                                <a href="{% url 'account:dashboard' %}" style="font-size: 16px;">حساب من</a>
+                            </div>
+                        {% else %}
+                            <div class="element">
+                                <a href="{% url 'account:register' %}" style="font-size: 16px;"> ثبت نام </a>
+                            </div>
+                            <div class="element">
+                                <a href="{% url 'account:login' %}" style="font-size: 16px;">&nbsp;&nbsp;ورود&nbsp;</a>
+                            </div>
+                        {% endif %}
+                        <div class="element">
+                            <a href="{% url 'home:products' %}" style="font-size: 16px;">همه محصولات</a>
+                        </div>
+                        <div class="element">&nbsp;
+                            <a href="{% url 'home:mainpage' %}">
+                                <i class="fa fa-home" style="font-size: 22px; color: #761c19;"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

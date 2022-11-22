@@ -1,0 +1,108 @@
+/*
+	4.8. 404 Error page
+ */
+
+.error-page {
+    @media(min-width: $screen-md) {
+        padding-bottom: 44px;
+        padding-top: 62px;
+        margin: 29px 60px 110px 60px;
+    }
+    @media(min-width:1681px) {
+        margin: 29px 120px 110px 120px;
+    }
+    padding: 15px;
+    margin: 30px 0;
+}
+
+.error-img {
+    margin-bottom: 10px;
+}
+
+.error-title {
+    font-size: 30px;
+    font-weight: 300;
+    margin-bottom: 49px;
+}
+
+.btn-back {
+    width: 199px;
+    height: 47px;
+    line-height: 48px;
+    @include flex;
+    @include justify-content(center);
+    @include border-radius(999px);
+    margin: 0 auto;
+    margin-top: 23px;
+    i {
+        margin-left: 8px;
+    }
+}
+
+.searchform {
+    &.full {
+        position: relative;
+        @media(min-width: $screen-sm) {
+            width: 581px;
+            margin: 0 auto;
+            margin-bottom: 28px;
+        }
+        margin-bottom: 28px;
+        input {
+            height: 62px;
+            @include border-radius(999px);
+            border: 2px solid #eaeaea;
+            padding-left: 40px;
+        }
+        .input-group-btn {
+            padding: 0;
+            width: 50px;
+            top: 6px;
+            right: 5px;
+            .button_search {
+                color: #fff;
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                font-size: 20px;
+                @include border-radius(50%);
+                background: #333333;
+            }
+        }
+    }
+}
+
+.vertical-divider {
+    display: table;
+    text-align: center;
+    height: 58px;
+    width: 100%;
+    font-weight: 500;
+    color: #999;
+
+    .center-element {
+        position: relative;
+        display: table-cell;
+        vertical-align: middle;
+
+        &:before,
+        &:after {
+            position: absolute;
+            content: "";
+            width: 1px;
+            left: 50%;
+            border-left: 1px solid #e0e0e0;
+            ;
+        }
+        &:before {
+            bottom: 17px;
+            top: 0;
+            margin-bottom: 20px;
+        }
+        &:after {
+            top: 17px;
+            bottom: 0;
+            margin-top: 20px;
+        }
+    }
+}

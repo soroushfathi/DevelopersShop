@@ -1,0 +1,82 @@
+/*
+	5.4. Newsletter 
+ */
+
+.newsletter {
+    padding-top: 125px;
+    padding-bottom: 160px;
+    background-size: cover;
+    @media(max-width: $screen-xs-max) {
+        padding-left:15px;
+        padding-right: 15px;
+    }
+    &.ver2 {
+        background: #f6f6f6;
+    }
+}
+
+.newsletter-title {
+    color: #fff;
+    font-family: $custom-font;
+    font-size: 35px;
+    font-weight: 400;
+    margin-bottom: 45px;
+    @media(max-width: $screen-xs) {
+        font-size:22px;
+    }
+    &.ver2 {
+        color: #000;
+    }
+}
+
+.newsletter-content {
+    max-width: 520px;
+    margin: 0 auto;
+    .form-group {
+        position: relative;
+    }
+    .form-control {
+        background: -moz-linear-gradient(top, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.16) 100%);
+        /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.16) 100%);
+        /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.16) 100%);
+        /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        @include border-radius(0);
+        border: 0;
+        height: 52px;
+
+        @include placeholder(#fffefe, $size: "14px");
+
+        @media(min-width: $screen-sm) {
+            width:420px;
+            padding-left: 30px;
+        }
+        &.ver2 {
+            @include placeholder(#000, $size: "14px");
+            background: transparent;
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+            border-left: 1px solid #000;
+        }
+    }
+    .btn-newsletter {
+        position: absolute;
+        @include btn(77px, 52px, #000, #fbfbfb);
+        border: 0;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        top: 0;
+        right: 0;
+        &.ver2 {
+            @include btn(77px, 52px, #fff, #000);
+        }
+        &:hover {
+            background: #eb5050;
+            color: #fff;
+            @include transition2;
+        }
+    }
+}

@@ -1,0 +1,210 @@
+/*
+    6.4. Other Page
+            6.4.1 My account
+
+
+ */
+
+//Login
+.page-title {
+    font-size: 18px;
+    font-weight: 500;
+    @include border-radius(999px);
+    border: 2px solid #333333;
+    background: #fff;
+    display: inline-block;
+    line-height: 50px;
+    &.v1 {
+        width: 182px;
+    }
+    &.v2 {
+        width: 116px;
+    }
+    &.v3 {
+        width: 155px;
+    }
+    &.v4 {
+        width: 134px;
+    }
+    &.v5 {
+        width: 210px;
+    }
+    &.v6 {
+        width: 229px;
+    }
+}
+
+.myaccount {
+    .row.pd {
+
+        @include flex-wrap(wrap);
+
+        @media(min-width: 1681px) {
+            padding-left:80px;
+            padding-right: 80px;
+        }
+        @media(min-width:$screen-md) {
+            margin: 0;
+            padding-top: 70px;
+            padding-bottom: 136px;
+            @include flex-direction(row);
+        }
+        @include flex-direction(column);
+        @media(max-width:$screen-sm-max) {
+            @include align-items(center);
+        }
+        padding-top: 30px;
+        padding-bottom: 50px;
+    }
+    .account-element {
+        @include flex;
+        @include flex-direction(column);
+        @include align-items(center);
+
+        max-width: 560px;
+        width: 560px;
+        @media(max-width: $screen-xs) {
+            max-width:360px;
+            width: 360px;
+        }
+        @media(max-width:320px) {
+            max-width: 320px;
+            width: 320px;
+        }
+        &.e-left {
+            @media(min-width: $screen-md) {
+                margin-left: auto;
+            }
+            @media(max-width:$screen-sm-max) {
+                margin-top: 90px;
+            }
+        }
+    }
+    .form-group {
+        margin-bottom: 42px;
+        label {
+            color: #666666;
+            margin-bottom: 17px;
+        }
+        input {
+            height: 54px;
+            @include border-radius(999px);
+            border: 1px solid #eaeaea;
+            @include placeholder(#999999, 14px);
+            padding-left: 33px;
+            margin-bottom: 30px;
+            @media(min-width: $screen-xs) {
+                width:480px;
+            }
+            @media(max-width:$screen-xs) {
+                max-width: 320px;
+                width: 320px;
+            }
+            @media(max-width:320px) {
+                max-width: 280px;
+                width: 280px;
+            }
+        }
+    }
+    .btn-submit {
+        font-size: 16px;
+        width: 159px;
+        height: 54px;
+        line-height: 54px;
+        @include border-radius(999px);
+        padding: 0;
+        border: 0;
+    }
+    .checkbox label {
+        color: #666666;
+        &:before {
+            border-radius: 50%;
+            content: "";
+            display: inline-block;
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            left: 0;
+            top: 3px;
+            margin-left: -23px;
+            border: 1px solid #d9d9d9;
+            background-color: #fff;
+            -webkit-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+            -o-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+            transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+        }
+        &:after {
+            display: inline-block;
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            left: 0;
+            top: 0;
+            margin-left: -24px;
+            padding-left: 3px;
+            padding-top: 1px;
+            font-size: 11px;
+            color: #555555;
+        }
+    }
+    .checkbox.checkbox-default {
+        input[type="checkbox"],
+        input[type="radio"] {
+            opacity: 0;
+            z-index: 1;
+            cursor: pointer;
+        }
+        input[type="checkbox"]:checked+label:after,
+        input[type="radio"]:checked+label:after {
+            font-family: 'FontAwesome';
+            content: "\f00c";
+        }
+    }
+}
+
+.page-content {
+    padding-bottom: 52px;
+    padding-top: 10px;
+    p {
+        color: #999999;
+        text-align: center;
+        margin-bottom: 38px;
+    }
+}
+
+.btn-lostpwd {
+    color: #999999;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    position: relative;
+    text-decoration: underline;
+    &.spc {
+        padding-top: 60px;
+    }
+}
+
+.myaccount.trackorder {
+    .row.pd {
+        @include justify-content(center);
+    }
+    @media(min-width:$screen-md) {
+        .row.pd {
+            padding-bottom: 131px;
+        }
+    }
+    .page-content p {
+        @media(min-width: $screen-xs) {
+            max-width: 460px;
+            padding-top: 5px;
+            line-height: 26px;
+            margin-bottom: 40px;
+        }
+        @media(max-width:$screen-xs) {
+            width: 320px;
+        }
+        @media(max-width:320px) {
+            width: 280px;
+        }
+    }
+}
