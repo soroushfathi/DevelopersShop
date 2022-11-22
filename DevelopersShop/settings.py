@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-f^r^rjhgk)91(kce5%-nz=!i*8q$1rnwi90&kyri0n&i%s_u*1'
+SECRET_KEY = os.environ['DEVSHOP_SECRETKEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -51,8 +51,8 @@ INSTALLED_APPS = [
     'django_jalali',
 
     # 3'rd party
-    'django_celery',
-    'django_celery_result',
+    # 'django-celery',
+    # 'django_celery_result',
 ]
 
 MIDDLEWARE = [
@@ -193,9 +193,9 @@ CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'django-cache'
 
 # celery setting.
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.backends.db.DatabaseCache',
-        'LOCATION': 'my_cache_table',
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.backends.db.DatabaseCache',
+#         'LOCATION': 'my_cache_table',
+#     }
+# }
