@@ -1,0 +1,12 @@
+version: '3.1'
+
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backup: {}
+
+services:
+  django:
+
+  postgres:
+
+  do
