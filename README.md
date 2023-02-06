@@ -2,9 +2,7 @@
 A simple online-shop for 
 
 #### Instllation
-```cmd
-$ docker-compose up
-```
+- dockerizing (Ongoing)
 
 ###### Details: <br>
 - self User model 
