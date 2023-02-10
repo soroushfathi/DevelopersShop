@@ -20,12 +20,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-f^r^rjhgk)91(kce5%-nz=!i*8q$1rnwi90&kyri0n&i%s_u*1django-insecure-f^r^rjhgk)91(kce5%-nz=!i*8q$1rnwi90&kyri0n&i%s_u*1"
+SECRET_KEY = os.environ['DEVSHOP_SECRETKEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CURR_HOST = 'localhost'
 
 # Application definition
 
@@ -95,10 +96,10 @@ DATABASES = {
     # },
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'devshop',
+        'NAME': 'devshop_01',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',
+        'HOST': CURR_HOST,
         'POTR': '5432',
     }
 }
@@ -185,12 +186,17 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = False
 SECURE_FRAME_DENY = False
 
 
-CELERY_TIMEZONE = "Iran/Tehran"
-CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60
-
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BROKER_URL = f'redis://{CURR_HOST}:6379'
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_DEFAULT_QUEUE = 'default'
+# CELERY_TASK_TRACK_STARTED = True
+# CELERY_TASK_TIME_LIMIT = 30 * 60
+
 
 # celery setting.
 # CACHES = {
