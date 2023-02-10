@@ -1,6 +1,10 @@
 # DevelopersShop
+A simple online-shop for 
 
-###### a website for developers shop, developed by django, options: <br>
+#### Instllation
+- dockerizing (Ongoing)
+
+###### Details: <br>
 - self User model 
 - Forgot Password (CBV) 
 - SMS authentication 
