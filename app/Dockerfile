@@ -1,7 +1,7 @@
 FROM python:3.9-alpine
 
 # setup env var
-ENV HOME=/home/app/webapp
+ENV HOME=/home
 
 RUN mkdir -p $HOME
 
@@ -9,10 +9,10 @@ WORKDIR ${HOME}
 
 RUN pip install --upgrade pip
 
-COPY . $HOME
-
-EXPOSE 8000
+COPY . .
 
 RUN pip install -r requirements.txt
 
-CMD python manage.py runserver
+EXPOSE 8000
+
+CMD ["python",  "manage.py" ,"runserver", "0.0.0.0:8000"]
