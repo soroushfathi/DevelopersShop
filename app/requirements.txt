@@ -31,6 +31,7 @@ django-seed==0.3.1
 django-taggit==2.1.0
 djangorestframework==3.14.0
 Faker==15.0.0
+gunicorn
 idna==3.4
 itypes==1.2.0
 jdatetime==4.1.0
